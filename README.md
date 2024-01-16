@@ -1,0 +1,1 @@
+# ar-emacs-scala-mode
