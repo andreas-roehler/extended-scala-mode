@@ -250,7 +250,10 @@ Second group grabs the name")
    "[( \t:]+")
   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
 
+(require 'ar-navigate)
 (require 'ar-emacs-scala-navigate)
+(require 'ar-navigate-backward-forms)
+(require 'ar-navigate-forward-forms)
 
 (provide 'ar-emacs-scala-mode)
 ;;; ar-emacs-scala-mode.el ends here
