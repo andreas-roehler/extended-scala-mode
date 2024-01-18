@@ -113,7 +113,7 @@ See ‘ar-scala-no-outdent-re-raw’ for better readable content")
   "If looking at the beginning of an assignment.")
 
 ;; 'name':
-(defconst ar-scala-dict-re "'\\_<\\w+\\_>':")
+(defconst ar-scala-map-re "'\\_<\\w+\\_>':")
 
 (defcustom ar-scala-block-re-raw
   (list
@@ -122,6 +122,7 @@ See ‘ar-scala-no-outdent-re-raw’ for better readable content")
    "for"
    "if"
    "match"
+   "trait"
    "try"
    "while"
    "with"
@@ -183,10 +184,10 @@ See ‘ar-scala-minor-block-re-raw’ for better readable content")
 ;; (defconst ar-scala-elif-block-re "[ \t]*\\_<elif\\_> +[[:alpha:]_][[:alnum:]_]* *[: \n\t]"
 ;;   "Matches the beginning of an ‘elif’ block.")
 
-(defconst ar-scala-class-re "[ \t]*\\_<\\(class\\|object\\)\\_>[ \n\t]"
+(defconst ar-scala-class-re "[ \t]*\\_<\\(class\\|object\\|trait\\)\\_>[ \n\t]"
   "Matches the beginning of a class definition.")
 
-(defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|object\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
+(defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|object\\|trait\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
   "Matches the beginning of a class- or functions definition.
 
 Second group grabs the name")
@@ -204,6 +205,7 @@ Second group grabs the name")
    "finally"
    "for"
    "if"
+   "trait"
    "try"
    "while"
    "with"
@@ -233,6 +235,7 @@ Second group grabs the name")
    "for"
    "if"
    "try"
+   "trait"
    "while"
    "with"
    "match"

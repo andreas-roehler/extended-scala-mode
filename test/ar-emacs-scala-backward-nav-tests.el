@@ -213,5 +213,81 @@ case class Rectangle(width: Int, height: Int) {
     (ar-scala-backward-def-or-class)
     (should (looking-at "case "))))
 
+(ert-deftest ar-emacs-scala-backward-nav-test-yYjS3s ()
+  (ar-test
+"// some comment
+trait Pet {
+    def speak = println(\"Yo\")     // concrete implementation of a speak method
+    def comeToMaster(): Unit      // abstract
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (ar-scala-backward-def-or-class)
+    (ar-scala-backward-def-or-class)
+    (ar-scala-backward-def-or-class)
+    (should (looking-at "trait "))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-yYjS3s ()
+  (ar-test
+"// some comment
+trait Pet {
+    def speak = println(\"Yo\")     // concrete implementation of a speak method
+    def comeToMaster(): Unit      // abstract
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (ar-scala-backward-class)
+    (should (looking-at "trait "))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-MHFSaE ()
+  (ar-test
+"// some comment
+def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
+  val init: D4 = (Double.PositiveInfinity, Double.NegativeInfinity, 0.0, 0)
+  val (min, max, sum, length) = a.foldLeft(init)(aktualisieren)
+  (min, max, sum/length)
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "min")
+    (ar-scala-backward-def)
+    (should (looking-at "def "))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-YNcqcU ()
+  (ar-test
+"// some comment
+def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
+  val init: D4 = (Double.PositiveInfinity, Double.NegativeInfinity, 0.0, 0)
+  val (min, max, sum, length) = a.foldLeft(init)(aktualisieren)
+  (min, max, sum/length)
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "min")
+    (ar-scala-backward-def-or-class)
+    (should (looking-at "def "))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-y9WuQ6 ()
+  (ar-test
+"// some comment
+def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
+  val init: D4 = (Double.PositiveInfinity, Double.NegativeInfinity, 0.0, 0)
+  val (min, max, sum, length) = a.foldLeft(init)(aktualisieren)
+  (min, max, sum/length)
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "D4")
+    (ar-scala-backward-def-or-class)
+    (should (looking-at "def "))))
+
 (provide 'ar-emacs-scala-backward-nav-tests)
 ;;; ar-emacs-scala-backward-nav-tests.el ends here

@@ -253,8 +253,37 @@ case class Rectangle(width: Int, height: Int) {
     (goto-char (point-min))
     (ar-scala-forward-def-or-class)
     (should (eq (char-before) ?}))
-    (forward-char -1)
     ))
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-5vQnkh ()
+  (ar-test-point-min
+"// some comment
+trait Pet {
+    def speak = println(\"Yo\")     // concrete implementation of a speak method
+    def comeToMaster(): Unit      // abstract
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def-or-class)
+    (should (eq (char-before) ?}))
+    ))
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-45R3LH ()
+  (ar-test-point-min
+"// some comment
+trait Pet {
+    def speak = println(\"Yo\")     // concrete implementation of a speak method
+    def comeToMaster(): Unit      // abstract
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (search-forward "def") 
+    (ar-scala-forward-def-or-class)
+    (should (eq (char-before) ?\)))
+    ))
+
 
 
 (provide 'ar-emacs-scala-forward-nav-tests)
