@@ -213,7 +213,7 @@ case class Rectangle(width: Int, height: Int) {
     (ar-scala-backward-def-or-class)
     (should (looking-at "case "))))
 
-(ert-deftest ar-emacs-scala-backward-nav-test-yYjS3s ()
+(ert-deftest ar-emacs-scala-backward-nav-test-HjAcmj ()
   (ar-test
 "// some comment
 trait Pet {

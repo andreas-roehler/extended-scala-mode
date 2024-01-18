@@ -36,7 +36,7 @@ Return beginning of form if successful, nil otherwise"
   (interactive)
   (let (erg)
     (setq erg (cdr-safe (ar--go-to-keyword ar-block-re)))
-    (when ar-mark-decorators (and (ar-backward-decorator)
+    (when ar-honor-decorators (and (ar-backward-decorator)
                                                  (setq erg (point))))
     erg))
 
@@ -48,7 +48,7 @@ Return beginning of form if successful, nil otherwise"
   (interactive)
   (let (erg)
     (setq erg (cdr-safe (ar--go-to-keyword ar-class-re)))
-    (when ar-mark-decorators (and (ar-backward-decorator)
+    (when ar-honor-decorators (and (ar-backward-decorator)
                                                  (setq erg (point))))
     erg))
 
@@ -59,7 +59,7 @@ If already at beginning, go one ‘def’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
   (let ((erg (cdr-safe (ar--go-to-keyword ar-def-re))))
-    (or (and ar-mark-decorators (ar-backward-decorator)) erg)))
+    (or (and ar-honor-decorators (ar-backward-decorator)) erg)))
 
 (defun ar-backward-def-or-class ()
  "Go to beginning of ‘def-or-class’.
@@ -68,7 +68,7 @@ If already at beginning, go one ‘def-or-class’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
   (let ((erg (cdr-safe (ar--go-to-keyword ar-def-or-class-re))))
-    (or (and ar-mark-decorators (ar-backward-decorator) erg))))
+    (or (and ar-honor-decorators (ar-backward-decorator) erg))))
 
 (defun ar-backward-block-bol ()
   "Go to beginning of ‘block’, go to BOL.

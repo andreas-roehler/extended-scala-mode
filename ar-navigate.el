@@ -171,8 +171,8 @@ See also `ar-operator-regexp'")
 
 (defvar ar-vertical-move-start-column nil)
 
-(defvar ar-mark-decorators nil)
-(make-variable-buffer-local 'ar-mark-decorators)
+(defvar ar-honor-decorators nil)
+(make-variable-buffer-local 'ar-honor-decorators)
 
 (defcustom ar-indent-offset 4
   "Amount of offset per level of indentation."
@@ -1022,175 +1022,6 @@ Optional argument ORIG Position."
     (when (called-interactively-p 'any) (message "%s" erg))
     erg))
 
-
-(defun ar-backward-statement (&optional orig done limit ignore-in-string-p repeat maxindent)
-  "Go to the initial line of a simple statement.
-
-For beginning of compound statement use `ar-backward-block'.
-For beginning of clause `ar-backward-clause'.
-
-`ignore-in-string-p' allows moves inside a docstring, used when
-computing indents
-ORIG - consider orignial position or point.
-DONE - transaktional argument
-LIMIT - honor limit
-IGNORE-IN-STRING-P - also much inside a string
-REPEAT - count and consider repeats
-Optional MAXINDENT: don't stop if indentation is larger"
-  (interactive)
-  (save-restriction
-    (unless (bobp)
-      (let* ((repeat (or (and repeat (1+ repeat)) 0))
-	     (orig (or orig (point)))
-             (pps (parse-partial-sexp (or limit (point-min))(point)))
-             (done done)
-             erg)
-	;; lp:1382788
-	(unless done
-	  (and (< 0 (abs (skip-chars-backward " \t\r\n\f")))
- 	       (setq pps (parse-partial-sexp (or limit (point-min))(point)))))
-        (cond
-	 ((< ar-max-specpdl-size repeat)
-	  (error "Py-forward-statement reached loops max. If no error, customize `ar-max-specpdl-size'"))
-         ((and (bolp) (eolp))
-          (skip-chars-backward " \t\r\n\f")
-          (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; inside string
-         ((and (nth 3 pps) (not ignore-in-string-p))
-	  (setq done t)
-	  (goto-char (nth 8 pps))
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ((nth 4 pps)
-	  (while (ignore-errors (goto-char (nth 8 pps)))
-	    (skip-chars-backward " \t\r\n\f")
-	    (setq pps (parse-partial-sexp (line-beginning-position) (point))))
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-         ((nth 1 pps)
-          (goto-char (1- (nth 1 pps)))
-	  (when (ar--skip-to-semicolon-backward (save-excursion (back-to-indentation) (point)))
-	    (setq done t))
-          (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-         ((ar-preceding-line-backslashed-p)
-          (forward-line -1)
-          (back-to-indentation)
-          (setq done t)
-          (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; at raw-string
-	 ;; (and (looking-at "\"\"\"\\|'''") (member (char-before) (list ?u ?U ?r ?R)))
-	 ((and (looking-at "\"\"\"\\|'''") (member (char-before) (list ?u ?U ?r ?R)))
-	  (forward-char -1)
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; BOL or at space before comment
-         ((and (looking-at "[ \t]*#") (looking-back "^[ \t]*" (line-beginning-position)))
-          (forward-comment -1)
-          (while (and (not (bobp)) (looking-at "[ \t]*#") (looking-back "^[ \t]*" (line-beginning-position)))
-            (forward-comment -1))
-          (unless (bobp)
-            (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent)))
-	 ;; at inline comment
-         ((looking-at "[ \t]*#")
-	  (when (ar--skip-to-semicolon-backward (save-excursion (back-to-indentation) (point)))
-	    (setq done t))
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; at beginning of string
-	 ((looking-at ar-string-delim-re)
-	  (when (< 0 (abs (skip-chars-backward " \t\r\n\f")))
-	    (setq done t))
-	  (back-to-indentation)
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; after end of statement
-	 ((and (not done) (eq (char-before) ?\;))
-	  (skip-chars-backward ";")
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; travel until indentation or semicolon
-	 ((and (not done) (ar--skip-to-semicolon-backward))
-	  (unless (and maxindent (< maxindent (current-indentation)))
-	    (setq done t))
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ;; at current indent
-	 ((and (not done) (not (eq 0 (skip-chars-backward " \t\r\n\f"))))
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent))
-	 ((and maxindent (< maxindent (current-indentation)))
-	  (forward-line -1)
-	  (ar-backward-statement orig done limit ignore-in-string-p repeat maxindent)))
-	;; return nil when before comment
-	(unless (and (looking-at "[ \t]*#") (looking-back "^[ \t]*" (line-beginning-position)))
-	  (when (< (point) orig)(setq erg (point))))
-	erg))))
-
-(defun ar-forward-statement (&optional orig done repeat)
-  "Go to the last char of current statement.
-
-Optional argument REPEAT, the number of loops DONE already,
-is checked for ‘ar-max-specpdl-size’ error.
-Avoid eternal loops due to missing string delimters etc.
-Optional argument ORIG Position."
-  (interactive)
-  (unless (eobp)
-    (let ((repeat (or (and repeat (1+ repeat)) 0))
-          (orig (or orig (point)))
-          erg
-          ;; use by scan-lists
-          parse-sexp-ignore-comments
-          forward-sexp-function
-          pps)
-      (setq pps (parse-partial-sexp (point-min) (point)))
-      ;; (origline (or origline (ar-count-lines)))
-      (cond
-       ((< ar-max-specpdl-size repeat)
-        (error "Ar-forward-statement reached loops max.
-If no error, customize `ar-max-specpdl-size'"))
-       ;; string
-       ((or (nth 3 pps)(eq (char-syntax (char-after)) 34))
-        (when (ar-end-of-string)
-          (end-of-line)
-          (skip-chars-backward " \t\r\n\f")
-          (setq pps (parse-partial-sexp (point-min) (point)))
-          (unless (and done
-                       (not (or (nth 1 pps) (nth 8 pps)))
-                       (eolp))
-            (ar-forward-statement orig done repeat))))
-       ;; in comment
-       ((or (nth 4 pps)(eq (char-syntax (char-after)) ?<))
-	(ar-forward-comment)
-        (ar-forward-statement orig done repeat))
-       ((ar--current-line-backslashed-p)
-        (end-of-line)
-        (skip-chars-backward " \t\r\n\f" (line-beginning-position))
-        (while (and (eq (char-before (point)) ?\\ )
-                    (ar-escaped-p))
-          (forward-line 1)
-          (end-of-line)
-          (skip-chars-backward " \t\r\n\f" (line-beginning-position)))
-        (unless (eobp)
-          (ar-forward-statement orig done repeat)))
-       ((eq orig (point))
-        (or (and
-	     (< 0 (abs (skip-chars-forward (concat " \t\r\n\f'\"" comment-start))))
-	     (eolp) (setq done t))
-	    (end-of-line)
-	    (skip-chars-backward " \t\r\n\f$"))
-        (ar-forward-statement orig done repeat))
-       ((eq (current-indentation) (current-column))
-	(end-of-line)
-	(skip-chars-backward " \t\r\n\f")
-	(setq done t)
-	(ar-forward-statement orig done repeat))
-       ;; list
-       ((nth 1 pps)
-	(unless done
-	  (goto-char (nth 1 pps))
-	  (ignore-errors (forward-sexp))
-	  (setq done t)
-	  (ar-forward-statement orig done repeat))))
-      (unless
-	  (or
-	   (eq (point) orig)
-	   (member (char-before) (list 10 32 9)))
-	(setq erg (point)))
-	(and ar-verbose-p (called-interactively-p 'any) (message "%s" erg))
-      erg)))
-
 (defun ar-forward-expression (&optional orig done repeat pps)
   "Go to the end of a compound expression.
 
@@ -1703,9 +1534,12 @@ Optional ENFORCE-REGEXP: search for regexp only."
     (let* ((orig (point))
 	   (indent (or indent 0))
 	   done
-	   (regexpvalue (if (member regexp (list 'ar-def-re 'ar-def-or-class-re 'ar-class-re))
-			    (concat (symbol-value regexp) "\\|" (symbol-value 'ar-decorator-re))
-			  (symbol-value regexp)))
+	   (regexpvalue
+            (if
+                (and (member regexp (list 'ar-def-re 'ar-def-or-class-re 'ar-class-re))
+                     ar-honor-decorators)
+		(concat (symbol-value regexp) "\\|" (symbol-value 'ar-decorator-re))
+	      (symbol-value regexp)))
 	   (lastvalue (and secondvalue
 			   (pcase regexp
 			     (`ar-try-re ar-finally-re)
@@ -1719,15 +1553,14 @@ Optional ENFORCE-REGEXP: search for regexp only."
 		    (cond (use-regexp
 			   ;; using regexpvalue might stop behind global settings, missing the end of form
 			   (re-search-forward (concat "^ \\{0,"(format "%s" indent) "\\}"regexpvalue) nil 'move 1))
-			  (t (re-search-forward (concat "^ \\{"(format "0,%s" indent) "\\}[[:alnum:]_@]+") nil 'move 1))))
-	     (or (nth 8 (parse-partial-sexp (point-min) (point)))
-	         (progn (back-to-indentation) (ar--forward-string-maybe (nth 8 (parse-partial-sexp orig (point)))))
-	         (and secondvalue (looking-at secondvalue))
-	         (and lastvalue (looking-at lastvalue))
-	         (and (looking-at regexpvalue) (setq done t))
-	         ;; ar-forward-def-or-class-test-3JzvVW
-	         ;; (setq done t)
-                 )))
+			  (t (re-search-forward (concat "^ \\{"(format "0,%s" indent) "\\}[[:alnum:]_@}]+") nil 'move 1))))
+	     (save-excursion
+               (or (nth 8 (parse-partial-sexp (point-min) (point)))
+	           (progn (back-to-indentation) (ar--forward-string-maybe (nth 8 (parse-partial-sexp orig (point)))))
+	           (and secondvalue (looking-at secondvalue))
+	           (and lastvalue (looking-at lastvalue))
+	           (and (looking-at regexpvalue) (setq done t))
+	           ))))
         (and (< orig (point)) (point))))))
 
 (defun ar--end-base (regexp &optional orig bol repeat)
@@ -1762,6 +1595,7 @@ Arg REGEXP, a symbol"
 		       ;; (eq 0 (current-column))
 		       (or (looking-at regexpvalue)
 			   (and (member regexp (list 'ar-def-re 'ar-def-or-class-re 'ar-class-re))
+                                ar-honor-decorators
 				(looking-at ar-decorator-re)
 				(ar-down-def-or-class))
 			   (and (member regexp (list 'ar-minor-block-re 'ar-if-re 'ar-for-re 'ar-try-re))
@@ -1772,7 +1606,7 @@ Arg REGEXP, a symbol"
 		 ((eq 0 (current-indentation))
 		  (ar--down-according-to-indent regexp nil 0 use-regexp))
 		 ;; look upward
-		 (t (ar--go-to-keyword regexp))))
+		 (t (ar--go-to-keyword regexpvalue))))
 	       (secondvalue (ignore-errors (nth 2 res)))
 	       erg)
 	  ;; (ar-for-block-p (looking-at ar-for-re))
