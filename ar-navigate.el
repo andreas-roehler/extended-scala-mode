@@ -31,6 +31,7 @@
   "When looking at beginning of string.")
 
 (defvar ar-smart-indentation nil)
+
 (defvar ar-block-re "")
 (make-variable-buffer-local 'ar-block-re)
 
@@ -277,18 +278,6 @@ Argument ORIG Position."
     (let ((pps (parse-partial-sexp (point-min) (point))))
       (unless (or (nth 3 pps) (nth 4 pps)(empty-line-p))
 	(point)))))
-
-;; (defun ar--beginning-of-statement-p (&optional pps)
-;;   "Return position, if cursor is at the beginning of a ‘statement’, nil otherwise."
-;;   (interactive)
-;;   (save-excursion
-;;     (let ((pps (or pps (parse-partial-sexp (point-min) (point)))))
-;;       (and (not (or (nth 8 pps) (nth 1 pps)))
-;;            (looking-at ar-statement-re)
-;;            (looking-back "[^ \t]*" (line-beginning-position))
-;;            (eq (current-column) (current-indentation))
-;; 	   (eq (point) (progn (ar-forward-statement) (ar-backward-statement)))
-;;            (point)))))
 
 (defun ar--guess-indent-forward ()
   "Called when moving to end of a form and `ar-smart-indentation' is on."

@@ -187,12 +187,12 @@ See ‘ar-scala-minor-block-re-raw’ for better readable content")
 (defconst ar-scala-class-re "[ \t]*\\_<\\(class\\|object\\|trait\\)\\_>[ \n\t]"
   "Matches the beginning of a class definition.")
 
-(defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|object\\|trait\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
+(defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|@tailrec def\\|object\\|trait\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
   "Matches the beginning of a class- or functions definition.
 
 Second group grabs the name")
 
-(defconst ar-scala-def-re "[ \t]*\\_<\\(case class\\|def\\)\\_>[ \n\t]"
+(defconst ar-scala-def-re "[ \t]*\\_<\\(case class\\|def\\|@tailrec def\\)\\_>[ \n\t]"
   "Matches the beginning of a functions definition.")
 
 (defcustom ar-scala-block-or-clause-re-raw

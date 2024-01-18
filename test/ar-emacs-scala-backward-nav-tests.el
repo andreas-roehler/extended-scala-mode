@@ -241,7 +241,7 @@ trait Pet {
     (ar-scala-backward-class)
     (should (looking-at "trait "))))
 
-(ert-deftest ar-emacs-scala-backward-nav-test-MHFSaE ()
+(ert-deftest ar-emacs-scala-backward-nav-test-BZ3aQM ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -306,6 +306,25 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
         (funcall 'ar-scala-backward-def)
       (funcall 'scala-syntax:beginning-of-definition))
     (should (looking-at "def "))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-eznI8K ()
+  (ar-test
+      "import scala.annotation.tailrec
+
+@tailrec def lengthT(s: Seq[Int], res: Int): Int =
+  if (s.isEmpty) res
+  else lengthT(s.tail, res + 1)
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "lengthT")
+    (if (featurep 'ar-emacs-scala-mode)
+        (funcall 'ar-scala-backward-def)
+      (funcall 'scala-syntax:beginning-of-definition))
+    (should (looking-at "def "))))
+
+
 
 (provide 'ar-emacs-scala-backward-nav-tests)
 ;;; ar-emacs-scala-backward-nav-tests.el ends here
