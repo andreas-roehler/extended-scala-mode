@@ -1,7 +1,7 @@
 # ar-emacs-scala-mode
 Navigation in Emacs scala-mode 
 
-Jump to beginning or end of function or class definition with keys
+Jump to beginning or end of function or class
 
 <kbd>C-M-a</kbd> and <kbd>C-M-e</kbd>.
 
