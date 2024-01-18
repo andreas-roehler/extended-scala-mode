@@ -289,5 +289,23 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     (ar-scala-backward-def-or-class)
     (should (looking-at "def "))))
 
+(ert-deftest ar-emacs-scala-backward-nav-test-MHFSaE ()
+  (ar-test
+"// some comment
+def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
+  val init: D4 = (Double.PositiveInfinity, Double.NegativeInfinity, 0.0, 0)
+  val (min, max, sum, length) = a.foldLeft(init)(aktualisieren)
+  (min, max, sum/length)
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "min")
+    (if (featurep 'ar-emacs-scala-mode)
+        (funcall 'ar-scala-backward-def)
+      (funcall 'scala-syntax:beginning-of-definition))
+    (should (looking-at "def "))))
+
 (provide 'ar-emacs-scala-backward-nav-tests)
 ;;; ar-emacs-scala-backward-nav-tests.el ends here
