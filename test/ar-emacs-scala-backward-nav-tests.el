@@ -150,6 +150,7 @@ assert(result == expected)
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
+    (search-backward "result")
     (ar-scala-backward-def)
     (should (looking-at "def main"))
     ))
@@ -196,7 +197,7 @@ object LargestTree {
     (goto-char (point-max))
     (search-backward "def largest")
     (beginning-of-line)
-    (ar-scala-backward-def-or-class)
+    (beginning-of-defun)
     (should (looking-at "object"))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-9Au9zk ()
@@ -210,7 +211,7 @@ case class Rectangle(width: Int, height: Int) {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (ar-scala-backward-def-or-class)
+    (beginning-of-defun)
     (should (looking-at "case "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-HjAcmj ()
@@ -223,9 +224,9 @@ trait Pet {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (ar-scala-backward-def-or-class)
-    (ar-scala-backward-def-or-class)
-    (ar-scala-backward-def-or-class)
+    (beginning-of-defun)
+    (beginning-of-defun)
+    (beginning-of-defun)
     (should (looking-at "trait "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-yYjS3s ()
@@ -270,7 +271,8 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "min")
-    (ar-scala-backward-def-or-class)
+    (beginning-of-defun)
+    ;; (sit-for 1) 
     (should (looking-at "def "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-y9WuQ6 ()
@@ -286,7 +288,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "D4")
-    (ar-scala-backward-def-or-class)
+    (beginning-of-defun)
     (should (looking-at "def "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-MHFSaE ()
@@ -324,7 +326,23 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
       (funcall 'scala-syntax:beginning-of-definition))
     (should (looking-at "def "))))
 
+(ert-deftest ar-emacs-scala-backward-nav-test-W1eux3 ()
+  (ar-test
+"import scala.annotation.tailrec
 
+def length[A](xs: Seq[A]): Int = {
+  @tailrec def lengthT(s: Seq[A], res: Int): Int = {
+    if (s.isEmpty) res
+    else lengthT(s.tail, res + 1)
+  }
+  lengthT(xs, 0)
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    ;; (forward-char -1)
+    (beginning-of-defun)
+    (should (looking-at "def length\\[A]"))))
 
 (provide 'ar-emacs-scala-backward-nav-tests)
 ;;; ar-emacs-scala-backward-nav-tests.el ends here

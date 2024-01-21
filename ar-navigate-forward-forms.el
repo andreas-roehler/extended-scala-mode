@@ -27,6 +27,7 @@
 
 ;;; Code:
 
+(require 'ar-navigate)
 
 (defun ar-forward-assignment (&optional orig bol)
   "Go to end of assignment.

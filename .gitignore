@@ -8,6 +8,6 @@ devel/
 RCS/
 hs_err_pid*
 run-travis-ci.sh
-test/*.*-test-*.scala
+test/ar*.scala
 
 

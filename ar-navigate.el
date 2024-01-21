@@ -31,7 +31,6 @@
   "When looking at beginning of string.")
 
 (defvar ar-smart-indentation nil)
-
 (defvar ar-block-re "")
 (make-variable-buffer-local 'ar-block-re)
 
@@ -278,6 +277,18 @@ Argument ORIG Position."
     (let ((pps (parse-partial-sexp (point-min) (point))))
       (unless (or (nth 3 pps) (nth 4 pps)(empty-line-p))
 	(point)))))
+
+;; (defun ar--beginning-of-statement-p (&optional pps)
+;;   "Return position, if cursor is at the beginning of a ‘statement’, nil otherwise."
+;;   (interactive)
+;;   (save-excursion
+;;     (let ((pps (or pps (parse-partial-sexp (point-min) (point)))))
+;;       (and (not (or (nth 8 pps) (nth 1 pps)))
+;;            (looking-at ar-statement-re)
+;;            (looking-back "[^ \t]*" (line-beginning-position))
+;;            (eq (current-column) (current-indentation))
+;; 	   (eq (point) (progn (ar-forward-statement) (ar-backward-statement)))
+;;            (point)))))
 
 (defun ar--guess-indent-forward ()
   "Called when moving to end of a form and `ar-smart-indentation' is on."
@@ -1159,13 +1170,16 @@ Optional argument MAXINDENT maxindent."
         (maxindent
          (if (empty-line-p)
              (progn
-               (ar-backward-statement)
+               ;; (ar-backward-statement)
+               (skip-chars-backward " \t\r\n\f")
                (current-indentation))
            (or maxindent (and (< 0 (current-indentation))(current-indentation))
                ;; make maxindent large enough if not set
                (* 99 ar-indent-offset))))
         (first t)
         done erg res)
+    (when (or (eq (car-safe (syntax-after (point))) 5) (eq (car-safe (syntax-after (1- (point)))) 5))
+      (ar-backward-sexp))
     (setq res (ar--go-to-keyword-intern regexp maxindent erg done first))
     (unless (eq (point) orig)
       (setq maxindent (nth 0 res)
@@ -1200,6 +1214,7 @@ Whit IACT, print result in message buffer.
 Returns beginning of FORM if successful, nil otherwise
 Argument REGEXP determined by form."
   (interactive "P")
+  (skip-chars-backward " \t\r\n\f")
   (unless (bobp)
     (let* ((orig (or orig (point)))
            (indent (or indent (progn

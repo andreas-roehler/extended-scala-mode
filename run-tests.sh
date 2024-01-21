@@ -48,39 +48,45 @@ echo "\$*: $*"
 PDIR=$PWD
 echo "\$PWD: $PWD"
 
-TESTDIR=${PWD}/test/
+TESTDIR=${PWD}/test
 export TESTDIR
 echo "\$TESTDIR: $TESTDIR"
 
-SCALAMODE=$HOME/arbeit/emacs-lisp/emacs-scala-mode/
+SCALAMODE=$HOME/arbeit/emacs-lisp/emacs-scala-mode
 echo "\$SCALAMODE: $SCALAMODE"
 export SCALAMODE
 
-ARSCALAM=$HOME/werkstatt/ar-emacs-scala-mode/
+ARSCALAM=$HOME/werkstatt/ar-emacs-scala-mode
 echo "\$ARSCALAM: $ARSCALAM"
 export ARSCALAM
 
 IFLOCAL=${IFLOCAL:=1}
 
-SETUP=${TESTDIR}ar-emacs-scala-mode-setup-tests.el
+SETUP=${TESTDIR}/ar-emacs-scala-mode-setup-tests.el
 
 FILE1=${PWD}/ar-subr.el
-FILE2=${PWD}/ar-navigate.el
-FILE3=${PWD}/ar-navigate-backward-forms.el
-FILE4=${PWD}/ar-navigate-forward-forms.el
-FILE5=${PWD}/ar-emacs-scala-navigate.el
-FILE6=${SCALAMODE}/scala-mode.el
-FILE7=${PWD}/ar-emacs-scala-mode.el
+FILE2=${PWD}/beg-end.el
+FILE3=${PWD}/ar-thingatpt-basic-definitions
+FILE4=${PWD}/thingatpt-utils-core
+FILE5=${PWD}/thing-at-point-utils
+FILE6=${PWD}/ar-sexp
+FILE7=${PWD}/ar-navigate.el
+FILE8=${PWD}/ar-navigate-backward-forms.el
+FILE9=${PWD}/ar-navigate-forward-forms.el
+FILE10=${SCALAMODE}/scala-mode.el
+FILE11=${PWD}/ar-emacs-scala-mode.el
+FILE12=${PWD}/ar-emacs-scala-navigate.el
 
-TEST1=${TESTDIR}ar-emacs-scala-backward-nav-tests.el
-TEST2=${TESTDIR}ar-emacs-scala-forward-nav-tests.el
-TEST3=
-TEST4=
+TEST1=${TESTDIR}/ar-emacs-scala-backward-nav-tests.el
+TEST2=${TESTDIR}/ar-emacs-scala-forward-nav-tests.el
+
 
 h1 () {
     $EMACS -Q --batch \
 --eval "(message (emacs-version))" \
+--eval "(add-to-list 'load-path (getenv \"PWD\"))" \
 --eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
+--eval "(require 'scala-mode)" \
 -load $FILE1 \
 -load $FILE2 \
 -load $FILE3 \
@@ -88,11 +94,17 @@ h1 () {
 -load $FILE5 \
 -load $FILE6 \
 -load $FILE7 \
+-load $FILE8 \
+-load $FILE9 \
+-load $FILE10 \
+-load $FILE11 \
+-load $FILE12 \
 \
 -load $SETUP \
 -load $TEST1 \
 -f ert-run-tests-batch-and-exit
 }
+
 hier () {
     $EMACS -Q --batch \
 --eval "(message (emacs-version))" \
@@ -131,10 +143,19 @@ entfernt () {
 -f ert-run-tests-batch-and-exit
 }
 
-if [ $IFLOCAL -eq 0 ]; then
 
-    [ $HOME/werkstatt/thingatpt-utils-core/ar-subr.el -nt ${PWD}/ar-subr.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/ar-subr.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/ar-subr.el $PWD
-    [ $HOME/werkstatt/emacs-generics/ar-navigate.el -nt ${PWD}/ar-navigate.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate.el $PWD
+if [ $IFLOCAL -eq 0 ]; then
+    aesm_aktu
+
+    # [ $HOME/werkstatt/thingatpt-utils-core/ar-subr.el -nt ${PWD}/ar-subr.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/ar-subr.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/ar-subr.el $PWD
+    # [ $HOME/werkstatt/thingatpt-utils-core/beg-end.el -nt ${PWD}/beg-end.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/beg-end.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/beg-end.el $PWD
+    # [ $HOME/werkstatt/thingatpt-utils-core/ar-thingatpt-basic-definitions.el -nt ${PWD}/ar-thingatpt-basic-definitions.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/ar-thingatpt-basic-definitions.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/ar-thingatpt-basic-definitions.el $PWD
+    # [ $HOME/werkstatt/thingatpt-utils-core/thingatpt-utils-core.el -nt ${PWD}/thingatpt-utils-core.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/thingatpt-utils-core.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/thingatpt-utils-core.el $PWD
+    # [ $HOME/werkstatt/thing-at-point-utils/thing-at-point-utils.el -nt ${PWD}/thing-at-point-utils.el ] && echo "cp -u $HOME/werkstatt/thing-at-point-utils/thing-at-point-utils.el $PWD"; cp -u $HOME/werkstatt/thing-at-point-utils/thing-at-point-utils.el $PWD
+    # [ $HOME/werkstatt/thing-at-point-utils/ar-sexp.el -nt ${PWD}/ar-sexp.el ] && echo "cp -u $HOME/werkstatt/thing-at-point-utils/ar-sexp.el $PWD"; cp -u $HOME/werkstatt/thing-at-point-utils/ar-sexp.el $PWD    
+    # [ $HOME/werkstatt/emacs-generics/ar-navigate.el -nt ${PWD}/ar-navigate.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate.el $PWD
+    # [ $HOME/werkstatt/emacs-generics/ar-navigate-backward-forms.el -nt ${PWD}/ar-navigate-backward-forms.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate-backward-forms.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate-backward-forms.el $PWD
+    # [ $HOME/werkstatt/emacs-generics/ar-navigate-forward-forms.el -nt ${PWD}/ar-navigate-forward-forms.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate-forward-forms.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate-forward-forms.el $PWD
 
     while getopts 123456789abcdefghijklmnopqrstuvwxyz option
 

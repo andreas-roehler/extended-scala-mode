@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+(require 'ar-navigate)
+
 (defun ar-backward-region ()
   "Go to the beginning of current region."
   (interactive)
@@ -68,7 +70,7 @@ If already at beginning, go one ‘def-or-class’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
   (let ((erg (cdr-safe (ar--go-to-keyword ar-def-or-class-re))))
-    (or (and ar-honor-decorators (ar-backward-decorator) erg))))
+    (or (and ar-honor-decorators (ar-backward-decorator)) erg)))
 
 (defun ar-backward-block-bol ()
   "Go to beginning of ‘block’, go to BOL.

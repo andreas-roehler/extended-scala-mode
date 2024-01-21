@@ -28,6 +28,15 @@
 ;; avoid: Warning reference to free variable ‘comint-last-prompt’
 (require 'comint)
 (require 'ar-subr)
+(require 'beg-end)
+(require 'ar-thingatpt-basic-definitions)
+(require 'thingatpt-utils-core)
+(require 'thing-at-point-utils)
+(require 'ar-navigate)
+(require 'ar-navigate-backward-forms)
+(require 'ar-navigate-forward-forms)
+(require 'ar-sexp)
+(require 'ar-emacs-scala-navigate)
 
 ;; Constants
 (defconst ar-scala-block-closing-keywords-re
@@ -226,25 +235,50 @@ Second group grabs the name")
 
 (defcustom ar-scala-extended-block-or-clause-re-raw
   (list
-   "class"
-   "def"
-   "elif"
-   "else"
-   "except"
-   "finally"
-   "for"
-   "if"
-   "try"
-   "trait"
-   "while"
-   "with"
-   "match"
-   "case"
-   )
-  "Matches the beginning of a compound statement or it's clause."
-  :type '(repeat string)
-  :tag "ar-scala-extended-block-or-clause-re-raw"
-  :group 'ar-scala-mode)
+      "abstract"
+      "case"
+      "catch"
+      "class"
+      "def"
+      "do"
+      "else"
+      "enum"
+      "export"
+      "extends"
+      "final"
+      "finally"
+      "for"
+      "forSome"
+      "given"
+      "if"
+      "implicit"
+      "import"
+      "lazy"
+      "match"
+      "new"
+      "object"
+      "override"
+      "package"
+      "private"
+      "protected"
+      "return"
+      "sealed"
+      "then"
+      "throw"
+      "trait"
+      "try"
+      "type"
+      "val"
+      "var"
+      "while"
+      "with"
+      "yield"
+
+)
+    "Matches the beginning of a compound statement or it's clause."
+    :type '(repeat string)
+    :tag "ar-scala-extended-block-or-clause-re-raw"
+    :group 'ar-scala-mode)
 
 (defconst ar-scala-extended-block-or-clause-re
   (concat
@@ -252,6 +286,8 @@ Second group grabs the name")
    (regexp-opt  ar-scala-extended-block-or-clause-re-raw 'symbols)
    "[( \t:]+")
   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
+
+(defvar beginning-of-defun-command #'ar-backward-def-or-class)
 
 (require 'ar-navigate)
 (require 'ar-emacs-scala-navigate)
