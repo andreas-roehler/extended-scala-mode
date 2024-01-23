@@ -65,6 +65,12 @@
   "[ \t]*@[^ ]+\\_>[ \n\t]*"
   "Regular expression matching keyword which typically closes a function.")
 
+(defcustom ar-emacs-scala-indent-offset 2
+  "Amount of offset per level of indentation."
+  :type 'integer
+  :tag "ar-emacs-scala-indent-offset")
+(make-variable-buffer-local 'ar-emacs-scala-indent-offset)
+
 (defcustom ar-scala-outdent-re-raw
   (list
    "case"
@@ -288,6 +294,21 @@ Second group grabs the name")
   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
 
 (defvar beginning-of-defun-command #'ar-backward-def-or-class)
+
+(defun ar-navigate-update-vars (mode)
+  (pcase mode
+    (`python-mode
+     (setq-local
+      ar-def-re ar-def-re
+      ar-class-re ar-class-re
+      ar-def-or-class-re ar-def-or-class-re))
+    (`scala-mode
+     (setq-local
+      ar-def-re ar-scala-def-re
+      ar-class-re ar-scala-class-re
+      ar-def-or-class-re ar-scala-def-or-class-re
+      ar-indent-offset ar-emacs-scala-indent-offset
+      ))))
 
 (require 'ar-navigate)
 (require 'ar-emacs-scala-navigate)

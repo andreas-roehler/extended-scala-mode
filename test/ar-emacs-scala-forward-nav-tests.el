@@ -35,6 +35,16 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
+(ert-deftest ar-emacs-scala-forward-def-test-O1YRXs ()
+  (ar-test-point-min
+      "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def-or-class)
+    (should (looking-back "???" (line-beginning-position)))
+    ))
+
 (ert-deftest ar-emacs-scala-forward-def-test-S8VNtl ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
@@ -44,6 +54,43 @@
     (goto-char (point-min))
     (ar-scala-forward-def)
     (should (looking-back "???" (line-beginning-position)))
+    ))
+
+(ert-deftest ar-emacs-scala-forward-def-test-XNuwtY ()
+  (ar-test-point-min
+      "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
+  ???"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def-or-class)
+    (should (looking-back "???" (line-beginning-position)))
+    ))
+
+
+
+(ert-deftest ar-emacs-scala-forward-def-test-yVEnBi ()
+  (ar-test-point-min
+      "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
+  (math.min(x, min), math.max(x, max), x + sum, length + 1)
+}
+
+def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
+  val init: D4 = (Double.PositiveInfinity, Double.NegativeInfinity, 0.0, 0)
+  val (min, max, sum, length) = a.foldLeft(init)(aktualisieren)
+  (min, max, sum/length)
+}
+
+val result =  multiLeftFoldInt(Seq(1.0, 1.5, 2.0, 2.5, 3.0))
+val expected =  (1.0,3.0,2.0)
+
+assert(result == expected)
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def)
+    (should (eq (char-before) ?}))
     ))
 
 (ert-deftest ar-emacs-scala-forward-def-test-wweans ()
@@ -255,6 +302,21 @@ case class Rectangle(width: Int, height: Int) {
     (should (eq (char-before) ?}))
     ))
 
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-8S6M05 ()
+  (ar-test-point-min
+      "// some comment
+case class Rectangle(width: Int, height: Int) {
+  val area = width * height
+  val neu = \"asf\"
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def-or-class)
+    (should (eq (char-before) ?}))
+    ))
+
 (ert-deftest ar-emacs-scala-forward-def-or-class-test-5vQnkh ()
   (ar-test-point-min
 "// some comment
@@ -279,9 +341,26 @@ trait Pet {
     'scala-mode
     ar-debug-p
     (goto-char (point-min))
-    (search-forward "def") 
+    (search-forward "def")
     (ar-scala-forward-def-or-class)
     (should (eq (char-before) ?\)))
+    ))
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-nALcPi ()
+  (ar-test
+"// some comment
+trait Pet {
+    def speak = println(\"Yo\")     //  concrete implementation of a speak method
+    def comeToMaster(): Unit      // abstract
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "//" nil t 2)
+    (ar-scala-forward-def-or-class)
+    (back-to-indentation) 
+    (should (looking-at "def comeToMaster"))
     ))
 
 

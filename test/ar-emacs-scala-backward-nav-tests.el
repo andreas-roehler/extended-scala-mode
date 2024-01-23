@@ -197,7 +197,7 @@ object LargestTree {
     (goto-char (point-max))
     (search-backward "def largest")
     (beginning-of-line)
-    (beginning-of-defun)
+    (ar-scala-backward-def-or-class)
     (should (looking-at "object"))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-9Au9zk ()
@@ -211,7 +211,7 @@ case class Rectangle(width: Int, height: Int) {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (beginning-of-defun)
+    (ar-scala-backward-def-or-class)
     (should (looking-at "case "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-HjAcmj ()
@@ -224,9 +224,7 @@ trait Pet {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (beginning-of-defun)
-    (beginning-of-defun)
-    (beginning-of-defun)
+    (ar-scala-backward-def-or-class)
     (should (looking-at "trait "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-yYjS3s ()
@@ -271,7 +269,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "min")
-    (beginning-of-defun)
+    (ar-scala-backward-def-or-class)
     ;; (sit-for 1) 
     (should (looking-at "def "))))
 
@@ -288,7 +286,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "D4")
-    (beginning-of-defun)
+    (ar-scala-backward-def-or-class)
     (should (looking-at "def "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-MHFSaE ()
@@ -341,7 +339,7 @@ def length[A](xs: Seq[A]): Int = {
     ar-debug-p
     (goto-char (point-max))
     ;; (forward-char -1)
-    (beginning-of-defun)
+    (ar-scala-backward-def-or-class)
     (should (looking-at "def length\\[A]"))))
 
 (provide 'ar-emacs-scala-backward-nav-tests)

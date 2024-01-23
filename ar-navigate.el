@@ -1131,19 +1131,6 @@ Argument FUNCTION function."
 		 (ignore-errors (looking-at comment-start)))))
     erg))
 
-(defun ar-navigate-update-vars (mode)
-  (pcase mode
-    (`python-mode
-     (setq-local
-      ar-def-re ar-def-re
-      ar-class-re ar-class-re
-      ar-def-or-class-re ar-def-or-class-re))
-    (`scala-mode
-     (setq-local
-      ar-def-re ar-scala-def-re
-      ar-class-re ar-scala-class-re
-      ar-def-or-class-re ar-scala-def-or-class-re))))
-
 (defun ar-mode-specific-tuning (mode)
   (pcase mode
     (`scala-mode
@@ -1159,8 +1146,9 @@ Argument FUNCTION function."
         (setq done t))
     (when (and first (not maxindent))
       (setq maxindent (current-indentation))
-      (setq first nil)))
-  (list maxindent erg done first))
+      ;; (setq first nil)
+      ))
+  (list maxindent erg done))
 
 (defun ar--go-to-keyword (regexp &optional maxindent)
   "Return a list, whose car is indentation, cdr position.
@@ -1185,16 +1173,16 @@ Optional argument MAXINDENT maxindent."
       (setq maxindent (nth 0 res)
             erg (nth 1 res)
             done (nth 2 res)
-            first (nth 3 res)))
+            first nil))
     ;; erg done first)
     (unless (bobp)
-      (while (or (not done) (eq (point) orig))
+      (while (and (not (bobp))(or (not done) (eq (point) orig)))
         (while (and (re-search-backward regexp nil 'move 1) (nth 8 (syntax-ppss))))
         (setq res (ar--go-to-keyword-intern regexp maxindent erg done first))
         (setq maxindent (nth 0 res)
               erg (nth 1 res)
               done (nth 2 res)
-              first (nth 3 res))
+              first nil)
         ;; (or (< (point) orig) (ar-backward-statement))
         )
       ;; mode-specific tuning
@@ -1530,12 +1518,14 @@ Return position of moved, nil otherwise."
       (when (eq orig (point))
         orig))))
 
-(defun ar--down-according-to-indent (regexp secondvalue &optional indent use-regexp)
+(defun ar--down-according-to-indent (regexp secondvalue &optional indent use-regexp def-scan-from-current-line-p)
   "Return position if moved, nil otherwise.
 
 Optional ENFORCE-REGEXP: search for regexp only."
   (unless (eobp)
     (let* ((orig (point))
+           (last orig)
+           (first t)
 	   (indent (or indent 0))
 	   done
 	   (regexpvalue
@@ -1547,25 +1537,50 @@ Optional ENFORCE-REGEXP: search for regexp only."
 	   (lastvalue (and secondvalue
 			   (pcase regexp
 			     (`ar-try-re ar-finally-re)
-			     (`ar-if-re ar-else-re)))))
+			     (`ar-if-re ar-else-re))))
+           pps)
       (if (eq regexp 'ar-clause-re)
           (ar-forward-clause-intern indent)
         (while
-	    (and
-	     (not done)
-	     (progn (end-of-line)
-		    (cond (use-regexp
-			   ;; using regexpvalue might stop behind global settings, missing the end of form
-			   (re-search-forward (concat "^ \\{0,"(format "%s" indent) "\\}"regexpvalue) nil 'move 1))
-			  (t (re-search-forward (concat "^ \\{"(format "0,%s" indent) "\\}[[:alnum:]_@}]+") nil 'move 1))))
-	     (save-excursion
-               (or (nth 8 (parse-partial-sexp (point-min) (point)))
-	           (progn (back-to-indentation) (ar--forward-string-maybe (nth 8 (parse-partial-sexp orig (point)))))
-	           (and secondvalue (looking-at secondvalue))
-	           (and lastvalue (looking-at lastvalue))
-	           (and (looking-at regexpvalue) (setq done t))
-	           ))))
-        (and (< orig (point)) (point))))))
+	    (and (not done) (or first (< last (point))) (or first (< indent (current-indentation)))(or first (not (looking-at ar-def-or-class-re))) (not (eobp)))
+	  (end-of-line) (setq last (point))
+          (setq pps (parse-partial-sexp (point-min) (point)))
+          (setq first nil)
+          (cond ((nth 4 pps)
+                 (ar-forward-comment))
+                ((and (nth 1 pps) def-scan-from-current-line-p)
+                 (goto-char (nth 1 pps))
+                 (ar-forward-sexp)
+                 (setq done t) (setq first nil) (setq last (point)))
+                (t
+	         (if use-regexp
+		     ;; using regexpvalue might stop behind global settings, missing the end of form
+		     (while (and
+                             (re-search-forward (concat "^ \\{0,"(format "%s" indent) "\\}"regexpvalue) nil 'move 1)
+                             (nth 8 (parse-partial-sexp (point-min) (point)))))
+
+                   (while (and (re-search-forward (concat "^ \\{"(format "0,%s" indent) "\\}[[:alnum:]_@}]+") nil 'move 1)
+                               (nth 8 (parse-partial-sexp (point-min) (point))))))
+	         (cond ((and secondvalue (looking-at secondvalue))
+                        (goto-char (match-end 0))(setq done t))
+	               ((and lastvalue (looking-at lastvalue))
+                        (goto-char (match-end 0))(setq done t))
+	               ((and (looking-back regexpvalue (line-beginning-position))
+                             ;; (when last (goto-char last))
+                             (goto-char (match-beginning 0))
+                             ;; (setq done t)
+                             )))))))
+      (when (< orig (point)) (goto-char last) (point)))))
+
+(defun ar--check-scan-from-current-line()
+  (save-excursion
+    (end-of-line)
+    (when (nth 4 (parse-partial-sexp (point-min) (point))) (goto-char (nth 8 (parse-partial-sexp (point-min) (point)))))
+    (skip-chars-backward " \t\r\n\f")
+    (skip-chars-backward "^{" (line-beginning-position))
+    (setq last (point))
+    (if (eq (car-safe (syntax-after (1- (point)))) 4)
+      (list last (char-before)))))
 
 (defun ar--end-base (regexp &optional orig bol repeat)
   "Used internal by functions going to the end FORM.
@@ -1574,62 +1589,85 @@ Returns the indentation of FORM-start
 Arg REGEXP, a symbol"
   (unless (eobp)
     (ar-navigate-update-vars major-mode)
-    (let (;; not looking for an assignment
-	  (use-regexp (member regexp (list 'ar-def-re 'ar-class-re 'ar-def-or-class-re)))
-	  (orig (or orig (point))))
+    (skip-chars-forward " \t\r\n\f")
+    (let ((pps (parse-partial-sexp (point-min) (point)))
+          (use-regexp (member regexp (list 'ar-def-re 'ar-class-re 'ar-def-or-class-re)))
+          (orig (or orig (point)))
+          (regexpvalue (symbol-value regexp))
+          last def-scan-from-current-line-p erg)
       (unless (eobp)
+        (when (or (nth 4 pps) (looking-at comment-start-skip)) (ar-forward-comment))
 	(unless (ar--beginning-of-statement-p)
 	  (ar-backward-statement))
-	(let* (;; when at block-start, be specific
-	       ;; (regexp (ar--refine-regexp-maybe regexp))
-               (regexpvalue (symbol-value regexp))
-               ;; (regexp (or regexp (symbol-value 'ar-extended-block-or-clause-re)))
-	       (repeat (if repeat (1+ repeat) 0))
-	       (indent (if
-			   (looking-at regexpvalue)
-			   (if (bolp) 0
-			     (abs
-			      (- (current-indentation) ar-indent-offset)))
-			 (current-indentation)))
-	       ;; when at block-start, be specific
-	       ;; return current-indentation, position and possibly needed clause-regexps (secondvalue)
-	       (res
-		(cond
-		 ((and (ar--beginning-of-statement-p)
-		       ;; (eq 0 (current-column))
-		       (or (looking-at regexpvalue)
-			   (and (member regexp (list 'ar-def-re 'ar-def-or-class-re 'ar-class-re))
-                                ar-honor-decorators
-				(looking-at ar-decorator-re)
-				(ar-down-def-or-class))
-			   (and (member regexp (list 'ar-minor-block-re 'ar-if-re 'ar-for-re 'ar-try-re))
-				(looking-at ar-clause-re))))
-		  (list (current-indentation) (point) (ar--end-base-determine-secondvalue regexp)))
-		 ((looking-at regexpvalue)
-		  (list (current-indentation) (point) (ar--end-base-determine-secondvalue regexp)))
-		 ((eq 0 (current-indentation))
-		  (ar--down-according-to-indent regexp nil 0 use-regexp))
-		 ;; look upward
-		 (t (ar--go-to-keyword regexpvalue))))
-	       (secondvalue (ignore-errors (nth 2 res)))
-	       erg)
+        (when (looking-at regexpvalue)
+          (setq erg (ar--check-scan-from-current-line))
+          (setq last (car-safe erg)
+                def-scan-from-current-line-p (cdr-safe erg))))
+      (if def-scan-from-current-line-p
+          (progn (goto-char last) (forward-char -1) (ar-forward-sexp))
+        (let (
+              ;; 'syntax (count-lines (point-min) (point))))))
+
+              ;; (regexp (or regexp (symbol-value 'ar-extended-block-or-clause-re)))
+	      (repeat (if repeat (1+ repeat) 0))
+	      (indent (if
+			  (looking-at regexpvalue)
+			  (if (bolp) 0
+			    (abs
+			     (- (current-indentation) ar-indent-offset)))
+			(current-indentation)))
+	      ;; when at block-start, be specific
+	      ;; return current-indentation, position and possibly needed clause-regexps (secondvalue)
+	      (res
+	       (cond
+		((and (ar--beginning-of-statement-p)
+		      ;; (eq 0 (current-column))
+		      (or (looking-at regexpvalue)
+			  (and (member regexp (list 'ar-def-re 'ar-def-or-class-re 'ar-class-re))
+                               ar-honor-decorators
+			       (looking-at ar-decorator-re)
+			       (ar-down-def-or-class))
+			  (and (member regexp (list 'ar-minor-block-re 'ar-if-re 'ar-for-re 'ar-try-re))
+			       (looking-at ar-clause-re))))
+		 (list (current-indentation) (point) (ar--end-base-determine-secondvalue regexp)))
+		((looking-at regexpvalue)
+		 (list (current-indentation) (point) (ar--end-base-determine-secondvalue regexp)))
+		;; ((eq 0 (current-indentation))
+		;;  (ar--down-according-to-indent regexp nil 0 use-regexp))
+		;; look upward
+		(t (ar--go-to-keyword regexpvalue))))
+	      (secondvalue (ignore-errors (nth 2 res)))
+	      erg)
 	  ;; (ar-for-block-p (looking-at ar-for-re))
 	  (setq indent (or (and res (car-safe res)) indent))
+          (when (looking-at regexpvalue)
+            (setq erg (ar--check-scan-from-current-line))
+            (setq last (car-safe erg)
+                  def-scan-from-current-line-p (cdr-safe erg)))
+          ;; (when (looking-at regexpvalue)
+          ;; (setq def-scan-from-current-line-p (ar--check-scan-from-current-line)))
 	  (cond
 	   (res (setq erg
 		      (and
-		       (ar--down-according-to-indent regexp secondvalue (current-indentation))
+		       (ar--down-according-to-indent regexp secondvalue indent use-regexp def-scan-from-current-line-p)
 		       ;; (if (>= indent (current-indentation))
 		       (ar--down-end-form)
 		       ;; (ar--end-base regexp orig bol repeat)
-		       ;; )
-		       )))
+		       ;;)
+                       )))
 	   (t (unless (< 0 repeat) (goto-char orig))
 	      (ar--forward-regexp (symbol-value regexp))
 	      (beginning-of-line)
-	      (setq erg (and
-			 (ar--down-according-to-indent regexp secondvalue (current-indentation) t)
-			 (ar--down-end-form)))))
+	      (setq erg
+                    ;; Now at beginning of form of interest, re-calculate ‘def-scan-from-current-line-p’
+                    (progn
+                      (when (looking-at regexpvalue)
+                        (setq erg (ar--check-scan-from-current-line))
+                        (setq last (car-safe erg)
+                              def-scan-from-current-line-p (cdr-safe erg)))
+                      ;; (setq def-scan-from-current-line-p (and (looking-at regexpvalue) (count-lines (point-min) (point))))
+		      (ar--down-according-to-indent regexp secondvalue (current-indentation) t def-scan-from-current-line-p)
+		      (ar--down-end-form)))))
 	  (cond ((< orig (point))
 		 (setq erg (point))
 		 (progn
@@ -1646,16 +1684,17 @@ Arg REGEXP, a symbol"
 							 ;; if expected indent is 0,
 							 ;; search for new start,
 							 ;; search for regexp only
-							 (eq 0 indent))
+							 (eq 0 indent)
+                                                         def-scan-from-current-line-p)
 			   (and
 			    ;; next block-start downwards, reduce expected indent maybe
 			    (setq indent (or (and (< 0 indent) (- indent ar-indent-offset)) indent))
 			    (ar--down-according-to-indent regexp secondvalue
-							  indent t))))
+							  indent t def-scan-from-current-line-p))))
 		     (ar--end-base regexp orig bol (1+ repeat))))))
 		((< (point) orig)
 		 (goto-char orig)
-		 (when (ar--down-according-to-indent regexp secondvalue nil t)
+		 (when (ar--down-according-to-indent regexp secondvalue nil t def-scan-from-current-line-p)
 		   (ar--end-base regexp (point) bol (1+ repeat))))))))))
 
 (defun ar-forward-def (&optional orig bol)

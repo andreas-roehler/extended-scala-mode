@@ -66,10 +66,10 @@ SETUP=${TESTDIR}/ar-emacs-scala-mode-setup-tests.el
 
 FILE1=${PWD}/ar-subr.el
 FILE2=${PWD}/beg-end.el
-FILE3=${PWD}/ar-thingatpt-basic-definitions
-FILE4=${PWD}/thingatpt-utils-core
-FILE5=${PWD}/thing-at-point-utils
-FILE6=${PWD}/ar-sexp
+FILE3=${PWD}/ar-thingatpt-basic-definitions.el
+FILE4=${PWD}/thingatpt-utils-core.el
+FILE5=${PWD}/thing-at-point-utils.el
+FILE6=${PWD}/ar-sexp.el
 FILE7=${PWD}/ar-navigate.el
 FILE8=${PWD}/ar-navigate-backward-forms.el
 FILE9=${PWD}/ar-navigate-forward-forms.el
@@ -105,19 +105,50 @@ h1 () {
 -f ert-run-tests-batch-and-exit
 }
 
-hier () {
+h2 () {
     $EMACS -Q --batch \
 --eval "(message (emacs-version))" \
---eval "(add-to-list 'load-path (getenv \"WERKSTATT/\"))" \
---eval "(add-to-list 'load-path (getenv \"test\"))" \
+--eval "(add-to-list 'load-path (getenv \"PWD\"))" \
+--eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
+--eval "(require 'scala-mode)" \
 -load $FILE1 \
 -load $FILE2 \
 -load $FILE3 \
 -load $FILE4 \
 -load $FILE5 \
+-load $FILE6 \
+-load $FILE7 \
+-load $FILE8 \
+-load $FILE9 \
+-load $FILE10 \
+-load $FILE11 \
+-load $FILE12 \
 \
--load $SETUP1 \
--load $SETUP2 \
+-load $SETUP \
+-load $TEST2 \
+-f ert-run-tests-batch-and-exit
+}
+
+hier () {
+    $EMACS -Q --batch \
+--eval "(message (emacs-version))" \
+--eval "(add-to-list 'load-path (getenv \"PWD\"))" \
+--eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
+--eval "(require 'scala-mode)" \
+-load $FILE1 \
+-load $FILE2 \
+-load $FILE3 \
+-load $FILE4 \
+-load $FILE5 \
+-load $FILE6 \
+-load $FILE7 \
+-load $FILE8 \
+-load $FILE9 \
+-load $FILE10 \
+-load $FILE11 \
+-load $FILE12 \
+\
+-load $SETUP \
 -load $TEST1 \
 -load $TEST2 \
 -f ert-run-tests-batch-and-exit
@@ -202,9 +233,7 @@ if [ $IFLOCAL -eq 0 ]; then
 
 	esac
     done
-
 else
-
     echo "Lade testumgebung \"ENTFERNT\""
     entfernt
 
