@@ -359,9 +359,135 @@ trait Pet {
     (goto-char (point-max))
     (search-backward "//" nil t 2)
     (ar-scala-forward-def-or-class)
-    (back-to-indentation) 
+    (back-to-indentation)
     (should (looking-at "def comeToMaster"))
     ))
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-L3Ki5e ()
+  (ar-test-point-min
+"val expected =  (1.0,3.0,2.0)
+
+assert(result == expected)
+
+// def update(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
+// (math.min(x, min), math.max(x, max), x + sum, length + 1)
+// }
+
+// Now we can write the code of the required function:
+// def f(xs: Seq[Double]): (Double, Double, Double) = {
+//   val init: D4 = (Double.PositiveInfinity, Double.NegativeInfinity, 0, 0)
+//   val (min, max, sum, length) = xs.foldLeft(init)(update)
+//   (min, max, sum/length)
+// }
+
+
+// scala> multiLeftFoldInt(Seq(1.0, 1.5, 2.0, 2.5, 3.0))
+// res4: (Double, Double, Double) = (1.0,3.0,2.0)
+
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def-or-class)
+    (should (looking-back "expected)" (line-beginning-position)))
+    ))
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-r8Auha ()
+  (ar-test-point-min
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
+
+  }
+}
+
+LargestTree.main(Array())
+
+// s$ scala solution2.1.7.10_object_main.scala
+// solution2.1.7.10_object_main.scala:31: warning: Script has a main object but statement is disallowed
+// LargestTree.main(Array())
+//                 ^
+// one warning found
+// solution2.1.7.10_object_main result: List(List(50, 30, 10), List(100), List(200, 20, 2))
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (ar-scala-forward-def-or-class)
+    (back-to-indentation)
+    (should (eq (char-after) ?}))
+    (should (bolp))
+    ))
+
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-lGhLdK ()
+  (ar-test-point-min
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
+
+  }
+}
+
+LargestTree.main(Array())
+
+// s$ scala solution2.1.7.10_object_main.scala
+// solution2.1.7.10_object_main.scala:31: warning: Script has a main object but statement is disallowed
+// LargestTree.main(Array())
+//                 ^
+// one warning found
+// solution2.1.7.10_object_main result: List(List(50, 30, 10), List(100), List(200, 20, 2))
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (end-of-line) 
+    (ar-scala-forward-def-or-class)
+    (back-to-indentation)
+    (should (eq (char-after) ?}))
+    (should (bolp))
+    ))
+
+(ert-deftest ar-emacs-scala-forward-def-or-class-test-RZEaEC ()
+  (ar-test-point-min
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s
+\".format(result))
+
+  }
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-min))
+    (search-forward "largest")
+    (ar-scala-forward-def-or-class)
+    (back-to-indentation)
+    (should (eq (char-after) ?}))
+    (should-not (eq (char-before) 20))
+    ))
+
+
+
 
 
 
