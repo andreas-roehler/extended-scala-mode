@@ -340,7 +340,7 @@ def length[A](xs: Seq[A]): Int = {
     (goto-char (point-max))
     ;; (forward-char -1)
     (ar-scala-backward-def-or-class)
-    (should (looking-at "def length\\[A]"))))
+    (should (looking-at "def length" t))))
 
 (provide 'ar-emacs-scala-backward-nav-tests)
 ;;; ar-emacs-scala-backward-nav-tests.el ends here

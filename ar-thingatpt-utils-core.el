@@ -1,4 +1,4 @@
-;;; thingatpt-utils-core.el --- th-at-point edit functions -*- lexical-binding: t; -*-
+;;; ar-thingatpt-utils-core.el --- th-at-point edit functions -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2010-2024 Andreas Röhler, unless
 ;; indicated otherwise
@@ -116,7 +116,7 @@
 ;; behaviour in such, as ‘ar-forward-word-atpt’ stops
 ;; not after THING, but on the last char of
 ;; THING. That's in order to enable a call of
-;; thing-at-point functions at the end
+;; thingatpt functions at the end
 ;; position. Otherwise, when cursor stops after word
 ;; (THING) as does ‘forward-word’, ‘ar-word-atpt’ would return
 ;; nil.
@@ -135,7 +135,7 @@
 ;; of execution via ‘ar-th-test-delay’
 
 ;; Diffs to basics of required thingatpt.el:
-;; ‘bounds-of-thing-at-point’ is replaced by a new
+;; ‘bounds-of-thingatpt’ is replaced by a new
 ;; ‘ar-th-bounds’, which now first searches
 ;; backward. As a consequence several
 ;; ‘beginning-op-at’ and ‘end-op-at’ constructs had
@@ -205,7 +205,7 @@
 ;; beginning-op-at and end-op-at. Point is stored
 ;; after move, beginning and end delivered as pair: as
 ;; consed bounds-of-thing. It's easy to write your own
-;; thing-at-point functions that way. You need the
+;; thingatpt functions that way. You need the
 ;; caller and both move forms:
 
 ;; (defun MY-FORM-atpt (&optional arg)
@@ -256,7 +256,7 @@
 
 ;;; Code:
 (require 'ar-subr)
-(require 'beg-end)
+(require 'ar-beg-end)
 (require 'hideshow)
 (require 'ar-thingatpt-basic-definitions)
 (defconst Emacs-Werkstatt-version "1.5")
@@ -275,16 +275,6 @@ Used by ‘ar-sort-numbers-subr’"
 
   :type 'boolean
   :group 'werkstatt)
-
-(defvar ar-match-in-string-p nil
-  "If an expression starts inside a string.
-
-Internal use only.")
-
-(defvar ar-match-in-comment-p nil
-  "If an expression starts inside a comment.
-
-Internal use only.")
 
 (defcustom ar-werkstatt-hs-minor-mode-p nil
   ""
@@ -1782,29 +1772,6 @@ Returns final position when called from inside section, nil otherwise"
     (goto-char beg)
     (exchange-point-and-mark)))
 
-(defvar ar-paired-delimited-passiv-raw
-  (list
-   '(braced "{" "}")
-   '(bracketed "[" "]")
-   '(lesserangled "<" ">")
-   '(greaterangled ">" "<")
-   '(curvedsinglequoted "‘" "’")
-   '(parentized "(" ")")))
-
-(defvar ar-unpaired-delimited-raw
-  (list
-   '(backslashed "\\\\")
-   '(backticked "`")
-   '(coloned ":")
-   '(dollared "$")
-   '(doublequoted "\\\"")
-   '(equalized "=")
-   '(hyphened "-")
-   '(singlequoted "'")
-   '(slashed "/")
-   '(stared "*")
-   '(underscored "_")
-   '(whitespaced " ")))
 
 (defvar ar-paired-delimited-passiv-raw
   (list
@@ -2174,5 +2141,5 @@ Returns final position when called from inside section, nil otherwise"
 
 
 
-(provide 'thingatpt-utils-core)
-;;; thingatpt-utils-core.el ends here
+(provide 'ar-thingatpt-utils-core)
+;;; ar-thingatpt-utils-core.el ends here

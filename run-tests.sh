@@ -83,6 +83,8 @@ TEST1=${TESTDIR}/ar-emacs-scala-backward-nav-tests.el
 TEST2=${TESTDIR}/ar-emacs-scala-forward-nav-tests.el
 TEST3=${TESTDIR}/ar-emacs-scala-beginning-of-defun-tests.el
 TEST4=${TESTDIR}/ar-emacs-scala-end-of-defun-tests.el
+TEST5=${TESTDIR}/ar-emacs-scala3-forward-function-tests.el
+TEST6=${TESTDIR}/ar-emacs-scala3-forward-function-tests-aufrufen.el
 
 $EMACS -Q --batch --eval "(message (emacs-version))" \
 --eval "(add-to-list 'load-path (getenv \"PWD\"))" \
@@ -140,6 +142,7 @@ h2 () {
 -load $TEST2 \
 -f ert-run-tests-batch-and-exit
 }
+
 h3 () {
     $EMACS -Q --batch \
 --eval "(add-to-list 'load-path (getenv \"PWD\"))" \
@@ -187,6 +190,30 @@ h4 () {
 -f ert-run-tests-batch-and-exit
 }
 
+lxcTests () {
+    $EMACS -Q --batch \
+--eval "(add-to-list 'load-path (getenv \"PWD\"))" \
+--eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
+--eval "(require 'scala-mode)" \
+--eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
+-load $FILE1 \
+-load $FILE2 \
+-load $FILE3 \
+-load $FILE4 \
+-load $FILE5 \
+-load $FILE6 \
+-load $FILE7 \
+-load $FILE8 \
+-load $FILE9 \
+-load $FILE10 \
+-load $FILE11 \
+-load $FILE12 \
+\
+-load $SETUP \
+-load $TEST5 \
+-load $TEST6 \
+-f ert-run-tests-batch-and-exit
+}
 
 hier () {
     $EMACS -Q --batch \
@@ -233,19 +260,20 @@ entfernt () {
 -f ert-run-tests-batch-and-exit
 }
 
-
 if [ $IFLOCAL -eq 0 ]; then
-    aesm_aktu
+    
+    WCO=$HOME/werkstatt/thingatpt-utils-core
+    ATPT=$HOME/werkstatt/thing-at-point-utils
+    
+    cp -p ${WCO}/ar-subr.el ar-subr.el
+    cp -p ${WCO}/ar-beg-end.el ar-beg-end.el
+    cp -p ${WCO}/ar-thingatpt-basic-definitions.el ar-thingatpt-basic-definitions.el
+    cp -p ${WCO}/ar-thingatpt-utils-core.el ar-thingatpt-utils-core.el
+    cp -p ${ATPT}/ar-thingatpt-utils.el ar-thingatpt-utils.el
+    cp -p ${ATPT}/ar-sexp.el ar-sexp.el
+    cp -u /home/speck/werkstatt/emacs-generics/ar-navigate.el .
 
-    # [ $HOME/werkstatt/thingatpt-utils-core/ar-subr.el -nt ${PWD}/ar-subr.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/ar-subr.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/ar-subr.el $PWD
-    # [ $HOME/werkstatt/thingatpt-utils-core/beg-end.el -nt ${PWD}/beg-end.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/beg-end.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/beg-end.el $PWD
-    # [ $HOME/werkstatt/thingatpt-utils-core/ar-thingatpt-basic-definitions.el -nt ${PWD}/ar-thingatpt-basic-definitions.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/ar-thingatpt-basic-definitions.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/ar-thingatpt-basic-definitions.el $PWD
-    # [ $HOME/werkstatt/thingatpt-utils-core/thingatpt-utils-core.el -nt ${PWD}/thingatpt-utils-core.el ] && echo "cp -u $HOME/werkstatt/thingatpt-utils-core/thingatpt-utils-core.el $PWD"; cp -u $HOME/werkstatt/thingatpt-utils-core/thingatpt-utils-core.el $PWD
-    # [ $HOME/werkstatt/thing-at-point-utils/thing-at-point-utils.el -nt ${PWD}/thing-at-point-utils.el ] && echo "cp -u $HOME/werkstatt/thing-at-point-utils/thing-at-point-utils.el $PWD"; cp -u $HOME/werkstatt/thing-at-point-utils/thing-at-point-utils.el $PWD
-    # [ $HOME/werkstatt/thing-at-point-utils/ar-sexp.el -nt ${PWD}/ar-sexp.el ] && echo "cp -u $HOME/werkstatt/thing-at-point-utils/ar-sexp.el $PWD"; cp -u $HOME/werkstatt/thing-at-point-utils/ar-sexp.el $PWD    
-    # [ $HOME/werkstatt/emacs-generics/ar-navigate.el -nt ${PWD}/ar-navigate.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate.el $PWD
-    # [ $HOME/werkstatt/emacs-generics/ar-navigate-backward-forms.el -nt ${PWD}/ar-navigate-backward-forms.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate-backward-forms.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate-backward-forms.el $PWD
-    # [ $HOME/werkstatt/emacs-generics/ar-navigate-forward-forms.el -nt ${PWD}/ar-navigate-forward-forms.el ] && echo "cp -u $HOME/werkstatt/emacs-generics/ar-navigate-forward-forms.el $PWD"; cp -u $HOME/werkstatt/emacs-generics/ar-navigate-forward-forms.el $PWD
+    aesm_aktu
 
     while getopts 123456789abcdefghijklmnopqrstuvwxyz option
 
@@ -286,7 +314,7 @@ if [ $IFLOCAL -eq 0 ]; then
 	    # t) echo "Lade \$TEST16: \"$TEST16\"";h16;;
 	    # u) echo "Lade \$TEST17: \"$TEST17\"";h17;;
 	    # v) echo "Lade \$TEST18: \"$TEST18\"";h18;;
-	    # w) echo "Lade \$TEST19: \"$TEST19\"";h19;;
+	    w) echo "Lade lxcTests: \"$TEST19\"";lxcTests;;
 	    x) echo "Lade testumgebung \"ENTFERNT\""; entfernt;;
 	    n) echo "Lade testumgebung \"HIER\"";hier;;
 

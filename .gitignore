@@ -1,3 +1,4 @@
+#*
 *.class
 *.log
 *.org
@@ -9,5 +10,7 @@ RCS/
 hs_err_pid*
 run-travis-ci.sh
 test/ar*.scala
-
-
+zu-ablage.sh
+test/ein.el
+ein.el
+test/#*
