@@ -28,14 +28,14 @@
 ;; avoid: Warning reference to free variable ‘comint-last-prompt’
 (require 'comint)
 (require 'ar-subr)
-(require 'beg-end)
+(require 'ar-beg-end)
 (require 'ar-thingatpt-basic-definitions)
-(require 'thingatpt-utils-core)
-(require 'thing-at-point-utils)
+(require 'ar-thingatpt-utils-core)
+(require 'ar-thingatpt-utils)
+(require 'ar-sexp)
 (require 'ar-navigate)
 (require 'ar-navigate-backward-forms)
 (require 'ar-navigate-forward-forms)
-(require 'ar-sexp)
 (require 'ar-emacs-scala-navigate)
 
 ;; Constants
@@ -74,7 +74,6 @@
 (defcustom ar-scala-outdent-re-raw
   (list
    "case"
-   "elif"
    "else"
    "except"
    "finally"
@@ -147,12 +146,16 @@ See ‘ar-scala-no-outdent-re-raw’ for better readable content")
   :tag "ar-scala-block-re-raw"
   :group 'ar-scala-mode)
 
+
 (defconst ar-scala-block-re (concat
 		       ;; "[ \t]*"
 		       (regexp-opt ar-scala-block-re-raw 'symbols)
 		       "[:( \n\t]"
 		       )
   "Matches the beginning of a compound statement.")
+
+(defconst ar-block-re ar-scala-block-re
+  "Populate ar-navigate.el.")
 
 (defconst ar-scala-minor-block-re-raw (list
                                       "case"
@@ -175,46 +178,69 @@ See ‘ar-scala-no-outdent-re-raw’ for better readable content")
 
 See ‘ar-scala-minor-block-re-raw’ for better readable content")
 
+(defconst ar-minor-block-re ar-scala-minor-block-re
+  "Populate ar-navigate.el.")
+
 (defconst ar-scala-try-re "[ \t]*\\_<try\\_>[: \n\t]"
   "Matches the beginning of a ‘try’ block.")
+
+(defconst ar-try-re ar-scala-try-re
+  "Populate ar-navigate.el.")
 
 (defconst ar-scala-case-re "[ \t]*\\_<case\\_>[: \t][^:]*:"
   "Matches a ‘case’ clause.")
 
+(defconst ar-case-re ar-scala-case-re
+  "Populate ar-navigate.el.")
+
 (defconst ar-scala-match-case-re "[ \t]*\\_<match\\_>[: \t][^:]*:"
   "Matches a ‘case’ clause.")
+
+(defconst ar-match-case-re ar-scala-match-case-re
+  "Populate ar-navigate.el.")
 
 (defconst ar-scala-for-re "[ \t]*\\_<\\(for\\)\\_> +[[:alpha:]_][[:alnum:]_]* +in +[[:alpha:]_][[:alnum:]_()]* *[: \n\t]"
   "Matches the beginning of a ‘try’ block.")
 
+(defconst ar-for-re ar-scala-for-re
+  "Populate ar-navigate.el.")
+
 (defconst ar-scala-if-re "[ \t]*\\_<if\\_> +[^\n\r\f]+ *[: \n\t]"
   "Matches the beginning of an ‘if’ block.")
+
+(defconst ar-if-re ar-scala-if-re
+  "Populate ar-navigate.el.")
 
 (defconst ar-scala-else-re "[ \t]*\\_<else:[ \n\t]"
   "Matches the beginning of an ‘else’ block.")
 
-(defconst ar-scala-elif-re "[ \t]*\\_<\\elif\\_>[( \n\t]"
-  "Matches the beginning of a compound if-statement's clause exclusively.")
-
-;; (defconst ar-scala-elif-block-re "[ \t]*\\_<elif\\_> +[[:alpha:]_][[:alnum:]_]* *[: \n\t]"
-;;   "Matches the beginning of an ‘elif’ block.")
+(defconst ar-else-re ar-scala-else-re
+  "Populate ar-navigate.el.")
 
 (defconst ar-scala-class-re "[ \t]*\\_<\\(class\\|object\\|trait\\)\\_>[ \n\t]"
   "Matches the beginning of a class definition.")
+
+(defconst ar-class-re ar-scala-class-re
+  "Populate ar-navigate.el.")
 
 (defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|@tailrec def\\|object\\|trait\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
   "Matches the beginning of a class- or functions definition.
 
 Second group grabs the name")
 
+(defvar ar-def-or-class-re ar-scala-def-or-class-re
+  "Populate ar-navigate.el.")
+
 (defconst ar-scala-def-re "[ \t]*\\_<\\(case class\\|def\\|@tailrec def\\)\\_>[ \n\t]"
   "Matches the beginning of a functions definition.")
+
+(defconst ar-def-re ar-scala-def-re
+ "Populate ar-navigate.el.")
 
 (defcustom ar-scala-block-or-clause-re-raw
   (list
    "class"
    "def"
-   "elif"
    "else"
    "except"
    "finally"
@@ -238,6 +264,9 @@ Second group grabs the name")
    (regexp-opt  ar-scala-block-or-clause-re-raw 'symbols)
    "[( \t]*.*:?")
   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
+
+(defconst ar-block-or-clause-re ar-scala-block-or-clause-re
+  "Populate ar-navigate.el.")
 
 (defcustom ar-scala-extended-block-or-clause-re-raw
   (list
@@ -293,17 +322,24 @@ Second group grabs the name")
    "[( \t:]+")
   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
 
+(defconst ar-extended-block-or-clause-re ar-scala-extended-block-or-clause-re
+  "Populate ar-navigate.el.")
+
 (defvar beginning-of-defun-command #'ar-backward-def-or-class)
 
 (defun ar-navigate-update-vars (mode)
   (pcase mode
     (`python-mode
      (setq-local
-      ar-def-re ar-def-re
-      ar-class-re ar-class-re
-      ar-def-or-class-re ar-def-or-class-re))
+      ar-def-re py-def-re
+      ar-class-re py-class-re
+      ar-def-or-class-re py-def-or-class-re))
     (`scala-mode
      (setq-local
+      ar-def-re ar-scala-def-re
+      ar-block-re ar-scala-block-re
+      ar-minor-block-re ar-scala-minor-block-re
+      ar-block-or-clause-re ar-scala-block-or-clause-re
       ar-def-re ar-scala-def-re
       ar-class-re ar-scala-class-re
       ar-def-or-class-re ar-scala-def-or-class-re

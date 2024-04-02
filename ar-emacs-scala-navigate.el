@@ -28,6 +28,7 @@
 ;; avoid: Warning reference to free variable ‘comint-last-prompt’
 (require 'comint)
 (require 'ar-subr)
+(require 'ar-beg-end)
 (require 'ar-navigate)
 (require 'ar-navigate-backward-forms)
 (require 'ar-navigate-forward-forms)

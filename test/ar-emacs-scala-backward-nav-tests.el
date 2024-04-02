@@ -270,7 +270,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     (goto-char (point-max))
     (search-backward "min")
     (ar-scala-backward-def-or-class)
-    ;; (sit-for 1) 
+    ;; (sit-for 1)
     (should (looking-at "def "))))
 
 (ert-deftest ar-emacs-scala-backward-nav-test-y9WuQ6 ()
@@ -341,6 +341,92 @@ def length[A](xs: Seq[A]): Int = {
     ;; (forward-char -1)
     (ar-scala-backward-def-or-class)
     (should (looking-at "def length" t))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-PFzcBf ()
+  (ar-test
+      "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
+  type Acc = (Seq[(A, A)], Seq[A])
+    // Type alias, for brevity.
+  def init: Acc = (Seq(), Seq())
+  def updater(acc: Acc, x: A): Acc = acc match {
+    case (result, Seq())
+        => (result, Seq(x))
+    case (result, Seq(prev)) => (result :+ ((prev, x)), Seq())
+  }
+  val (result, holdover) = xs.foldLeft(init)(updater)
+    holdover match {
+      // May need to append the last element to the result.
+      case Seq()
+          => result
+      case Seq(x)
+          => result :+ ((x, default))
+    }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (ar-scala-backward-def-or-class)
+    (should (looking-at "def toPairs" t))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-9vHP8b ()
+  (ar-test
+      "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
+  type Acc = (Seq[(A, A)], Seq[A])
+    // Type alias, for brevity.
+  def init: Acc = (Seq(), Seq())
+  def updater(acc: Acc, x: A): Acc = acc match {
+    case (result, Seq())
+        => (result, Seq(x))
+    case (result, Seq(prev)) => (result :+ ((prev, x)), Seq())
+  }
+  val (result, holdover) = xs.foldLeft(init)(updater)
+    holdover match {
+      // May need to append the last element to the result.
+      case Seq()
+          => result
+      case Seq(x)
+          => result :+ ((x, default))
+    }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "case" nil t 3)
+    (beginning-of-line)
+    (ar-scala-backward-def-or-class)
+    (should (looking-at "def updater" t))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-ZB5JkS ()
+  (ar-test
+      "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
+  type Acc = (Seq[(A, A)], Seq[A])
+    // Type alias, for brevity.
+  def init: Acc = (Seq(), Seq())
+  def updater(acc: Acc, x: A): Acc = acc match {
+    case (result, Seq())
+        => (result, Seq(x))
+    case (result, Seq(prev)) => (result :+ ((prev, x)), Seq())
+  }
+  val (result, holdover) = xs.foldLeft(init)(updater)
+    holdover match {
+      // May need to append the last element to the result.
+      case Seq()
+          => result
+      case Seq(x)
+          => result :+ ((x, default))
+    }
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (beginning-of-line)
+    (search-backward "}" nil t 2)
+    (end-of-line) 
+    (ar-scala-backward-def-or-class)
+    (should (looking-at "def updater" t))))
+
+
 
 (provide 'ar-emacs-scala-backward-nav-tests)
 ;;; ar-emacs-scala-backward-nav-tests.el ends here

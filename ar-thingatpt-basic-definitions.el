@@ -423,16 +423,18 @@
 
 (put 'delimited 'forward-op-at
      (lambda ()
-       (let ((begdel (concat th-beg-delimiter ar-delimiters-atpt))
-             erg)
-         (unless (looking-at (concat "[" begdel "]"))
-           (setq erg (funcall (get 'delimited 'beginning-op-at))))
-         (when (car-safe erg) (goto-char (car-safe erg)))
-         (if (looking-at (concat "[" begdel "]"))
-             (end-of-form-base (char-to-string (char-after)) (char-to-string (ar--return-complement-char-maybe (char-after))) nil 'move 0 t 'ar-syntax 'forward)
-           (skip-chars-forward (concat "^" th-beg-delimiter ar-delimiters-atpt))
-           (when (looking-at (concat "[" th-beg-delimiter ar-delimiters-atpt "]"))
-             (list (match-beginning 0) (match-end 0)))))))
+       (let ((orig (point))
+             (begdel (concat th-beg-delimiter ar-delimiters-atpt))
+             (erg (or
+                   (ar-th-end 'delimited no-delimiters)
+                   (unless (looking-at (concat "[" begdel "]"))
+                     (setq erg (funcall (get 'delimited 'beginning-op-at))))
+                   (when (car-safe erg) (goto-char (car-safe erg)))
+                   (if (looking-at (concat "[" begdel "]"))
+                       (end-of-form-base (char-to-string (char-after)) (char-to-string (ar--return-complement-char-maybe (char-after))) nil 'move 0 t 'ar-syntax 'forward)
+                     (skip-chars-forward (concat "^" th-beg-delimiter ar-delimiters-atpt))
+                     (when (looking-at (concat "[" th-beg-delimiter ar-delimiters-atpt "]"))
+                       (list (match-beginning 0) (match-end 0))))))))))
 
 (put 'delimited 'backward-op-at
      (lambda ()

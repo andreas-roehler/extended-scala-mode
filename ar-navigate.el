@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'ar-subr)
+(require 'ar-beg-end)
 
 (defvar ar-string-delim-re "\\(\"\"\"\\|'''\\|\"\\|'\\)"
   "When looking at beginning of string.")
@@ -1157,17 +1158,29 @@ Optional argument MAXINDENT maxindent."
   (let ((orig (point))
         (maxindent
          (if (empty-line-p)
-             (progn
-               ;; (ar-backward-statement)
-               (skip-chars-backward " \t\r\n\f")
-               (current-indentation))
+             ;; (progn
+             ;;   (skip-chars-backward " \t\r\n\f")
+             ;;   (current-indentation)
+             ;;   )
+             ;; honor current indent
+             (current-indentation)
            (or maxindent (and (< 0 (current-indentation))(current-indentation))
                ;; make maxindent large enough if not set
                (* 99 ar-indent-offset))))
+        (pps (parse-partial-sexp (point-min) (point)))
         (first t)
         done erg res)
-    (when (or (eq (car-safe (syntax-after (point))) 5) (eq (car-safe (syntax-after (1- (point)))) 5))
-      (ar-backward-sexp))
+    (cond ((or
+            ;; closeing parenthesis
+            (eq (car-safe (syntax-after (point))) 5)
+            (eq (car-safe (syntax-after (1- (point)))) 5))
+           (ar-backward-sexp))
+          ((and (nth 8 pps) (nth 1 pps))
+           (goto-char (min (nth 8 pps) (nth 1 pps))))
+          ((nth 8 pps)
+           (goto-char (nth 8 pps)))
+          ((nth 1 pps)
+           (goto-char (nth 1 pps))))
     (setq res (ar--go-to-keyword-intern regexp maxindent erg done first))
     (unless (eq (point) orig)
       (setq maxindent (nth 0 res)
@@ -1792,11 +1805,11 @@ Optional ENFORCE-REGEXP: search for regexp only."
 Returns the indentation of FORM-start
 Arg REGEXP, a symbol"
   (unless (eobp)
-    (when (eq 0 (current-column))
-      (save-restriction
-        (narrow-to-region (point) (point-max)))
-      (ar--end-base-intern regexp orig bol repeat))
-    (ar--end-base-intern regexp orig bol repeat)))
+    (if (eq 0 (current-column))
+        (save-restriction
+          (narrow-to-region (point) (point-max))
+          (ar--end-base-intern regexp orig bol repeat))
+      (ar--end-base-intern regexp orig bol repeat))))
 
 (defun ar-forward-def (&optional orig bol)
   "Go to end of def.
@@ -1807,30 +1820,6 @@ Optional BOL: go to beginning of line following end-position"
   (interactive)
   (cdr-safe (ar--end-base 'ar-def-re orig bol)))
 
-(defun ar-forward-def-bol ()
-  "Goto beginning of line following end of ‘def’.
-
-Return position reached, if successful, nil otherwise.
-See also ‘ar-down-def’."
-  (interactive)
-  (ar-forward-def nil t))
-
-(defun ar-forward-def-or-class (&optional orig bol)
-  "Go to end of def-or-class.
-
-Return end of ‘def-or-class’ if successful, nil otherwise
-Optional ORIG: start position
-Optional BOL: go to beginning of line following end-position"
-  (interactive)
-  (cdr-safe (ar--end-base 'ar-def-or-class-re orig bol)))
-
-(defun ar-forward-def-or-class-bol ()
-  "Goto beginning of line following end of ‘def-or-class’.
-
-Return position reached, if successful, nil otherwise.
-See also ‘ar-down-def-or-class’."
-  (interactive)
-  (ar-forward-def-or-class nil t))
 
 ;;  Decorator
 (defun ar-backward-decorator ()

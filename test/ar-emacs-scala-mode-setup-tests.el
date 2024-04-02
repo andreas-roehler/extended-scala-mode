@@ -30,17 +30,6 @@
 ;; (require 'ar-navigate-forward-forms)
 ;; (require 'ar-navigate-backward-forms)
 
-
-(defvar ar-debug-p nil
-  "Avoid error")
-
-;; (setq ar-debug-p t)
-
-(defcustom ar-debug-p nil
-  ""
-  :type 'boolean
-  :group 'werkstatt)
-
 (defun ar-toggle-debug-p ()
   "Toggle `ar-debug-p'. "
   (interactive)

@@ -27,6 +27,7 @@
 (defun ar-backward-region ()
   "Go to the beginning of current region."
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (let ((beg (region-beginning)))
     (when beg (goto-char beg))))
 
@@ -36,6 +37,7 @@
 If already at beginning, go one ‘block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (let (erg)
     (setq erg (cdr-safe (ar--go-to-keyword ar-block-re)))
     (when ar-honor-decorators (and (ar-backward-decorator)
@@ -48,6 +50,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘class’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (let (erg)
     (setq erg (cdr-safe (ar--go-to-keyword ar-class-re)))
     (when ar-honor-decorators (and (ar-backward-decorator)
@@ -60,6 +63,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘def’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (let ((erg (cdr-safe (ar--go-to-keyword ar-def-re))))
     (or (and ar-honor-decorators (ar-backward-decorator)) erg)))
 
@@ -69,6 +73,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘def-or-class’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (let ((erg (cdr-safe (ar--go-to-keyword ar-def-or-class-re))))
     (or (and ar-honor-decorators (ar-backward-decorator)) erg)))
 
@@ -77,6 +82,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘block’ backward.
 Return beginning of ‘block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-block)
        (progn (beginning-of-line)(point))))
 
@@ -85,6 +91,7 @@ Return beginning of ‘block’ if successful, nil otherwise"
 If already at beginning, go one ‘class’ backward.
 Return beginning of ‘class’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-class)
        (progn (beginning-of-line)(point))))
 
@@ -93,6 +100,7 @@ Return beginning of ‘class’ if successful, nil otherwise"
 If already at beginning, go one ‘def’ backward.
 Return beginning of ‘def’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-def)
        (progn (beginning-of-line)(point))))
 
@@ -101,6 +109,7 @@ Return beginning of ‘def’ if successful, nil otherwise"
 If already at beginning, go one ‘def-or-class’ backward.
 Return beginning of ‘def-or-class’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-def-or-class)
        (progn (beginning-of-line)(point))))
 
@@ -110,6 +119,7 @@ Return beginning of ‘def-or-class’ if successful, nil otherwise"
 If already at beginning, go one ‘assignment’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-assignment-re)))
 
 (defun ar-backward-block-or-clause ()
@@ -118,6 +128,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘block-or-clause’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-block-or-clause-re)))
 
 (defun ar-backward-clause ()
@@ -126,6 +137,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘clause’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-clause-re)))
 
 (defun ar-backward-elif-block ()
@@ -134,6 +146,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘elif-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-elif-re)))
 
 (defun ar-backward-else-block ()
@@ -142,6 +155,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘else-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-else-re)))
 
 (defun ar-backward-except-block ()
@@ -150,6 +164,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘except-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-except-re)))
 
 (defun ar-backward-for-block ()
@@ -158,6 +173,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘for-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-for-re)))
 
 (defun ar-backward-if-block ()
@@ -166,6 +182,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘if-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-if-re)))
 
 (defun ar-backward-minor-block ()
@@ -174,6 +191,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘minor-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-minor-block-re)))
 
 (defun ar-backward-try-block ()
@@ -182,6 +200,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘try-block’ backward.
 Return beginning of form if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (cdr-safe (ar--go-to-keyword ar-try-re)))
 
 (defun ar-backward-assignment-bol ()
@@ -189,6 +208,7 @@ Return beginning of form if successful, nil otherwise"
 If already at beginning, go one ‘assignment’ backward.
 Return beginning of ‘assignment’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-assignment)
        (progn (beginning-of-line)(point))))
 
@@ -197,6 +217,7 @@ Return beginning of ‘assignment’ if successful, nil otherwise"
 If already at beginning, go one ‘block-or-clause’ backward.
 Return beginning of ‘block-or-clause’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-block-or-clause)
        (progn (beginning-of-line)(point))))
 
@@ -205,6 +226,7 @@ Return beginning of ‘block-or-clause’ if successful, nil otherwise"
 If already at beginning, go one ‘clause’ backward.
 Return beginning of ‘clause’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-clause)
        (progn (beginning-of-line)(point))))
 
@@ -213,6 +235,7 @@ Return beginning of ‘clause’ if successful, nil otherwise"
 If already at beginning, go one ‘elif-block’ backward.
 Return beginning of ‘elif-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-elif-block)
        (progn (beginning-of-line)(point))))
 
@@ -221,6 +244,7 @@ Return beginning of ‘elif-block’ if successful, nil otherwise"
 If already at beginning, go one ‘else-block’ backward.
 Return beginning of ‘else-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-else-block)
        (progn (beginning-of-line)(point))))
 
@@ -229,6 +253,7 @@ Return beginning of ‘else-block’ if successful, nil otherwise"
 If already at beginning, go one ‘except-block’ backward.
 Return beginning of ‘except-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-except-block)
        (progn (beginning-of-line)(point))))
 
@@ -237,6 +262,7 @@ Return beginning of ‘except-block’ if successful, nil otherwise"
 If already at beginning, go one ‘for-block’ backward.
 Return beginning of ‘for-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-for-block)
        (progn (beginning-of-line)(point))))
 
@@ -245,6 +271,7 @@ Return beginning of ‘for-block’ if successful, nil otherwise"
 If already at beginning, go one ‘if-block’ backward.
 Return beginning of ‘if-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-if-block)
        (progn (beginning-of-line)(point))))
 
@@ -253,6 +280,7 @@ Return beginning of ‘if-block’ if successful, nil otherwise"
 If already at beginning, go one ‘minor-block’ backward.
 Return beginning of ‘minor-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-minor-block)
        (progn (beginning-of-line)(point))))
 
@@ -261,6 +289,7 @@ Return beginning of ‘minor-block’ if successful, nil otherwise"
 If already at beginning, go one ‘try-block’ backward.
 Return beginning of ‘try-block’ if successful, nil otherwise"
   (interactive)
+  (ar-navigate-update-vars major-mode)
   (and (ar-backward-try-block)
        (progn (beginning-of-line)(point))))
 

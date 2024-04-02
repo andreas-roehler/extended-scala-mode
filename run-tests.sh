@@ -67,10 +67,10 @@ IFLOCAL=${IFLOCAL:=1}
 SETUP=${TESTDIR}/ar-emacs-scala-mode-setup-tests.el
 
 FILE1=${PWD}/ar-subr.el
-FILE2=${PWD}/beg-end.el
+FILE2=${PWD}/ar-beg-end.el
 FILE3=${PWD}/ar-thingatpt-basic-definitions.el
-FILE4=${PWD}/thingatpt-utils-core.el
-FILE5=${PWD}/thing-at-point-utils.el
+FILE4=${PWD}/ar-thingatpt-utils-core.el
+FILE5=${PWD}/ar-thingatpt-utils.el
 FILE6=${PWD}/ar-sexp.el
 FILE7=${PWD}/ar-navigate.el
 FILE8=${PWD}/ar-navigate-backward-forms.el
@@ -264,16 +264,17 @@ if [ $IFLOCAL -eq 0 ]; then
     
     WCO=$HOME/werkstatt/thingatpt-utils-core
     ATPT=$HOME/werkstatt/thing-at-point-utils
+    GEN=$HOME/werkstatt/emacs-generics
     
-    cp -p ${WCO}/ar-subr.el ar-subr.el
-    cp -p ${WCO}/ar-beg-end.el ar-beg-end.el
-    cp -p ${WCO}/ar-thingatpt-basic-definitions.el ar-thingatpt-basic-definitions.el
-    cp -p ${WCO}/ar-thingatpt-utils-core.el ar-thingatpt-utils-core.el
-    cp -p ${ATPT}/ar-thingatpt-utils.el ar-thingatpt-utils.el
-    cp -p ${ATPT}/ar-sexp.el ar-sexp.el
-    cp -u /home/speck/werkstatt/emacs-generics/ar-navigate.el .
-
-    aesm_aktu
+    cp -pu ${WCO}/ar-subr.el .
+    cp -pu ${WCO}/ar-beg-end.el .
+    cp -pu ${WCO}/ar-thingatpt-basic-definitions.el .
+    cp -pu ${WCO}/ar-thingatpt-utils-core.el .
+    cp -pu ${ATPT}/ar-thingatpt-utils.el .
+    cp -pu ${ATPT}/ar-sexp.el .
+    cp -pu ${GEN}/ar-navigate.el .
+    cp -pu ${GEN}/ar-navigate-backward-forms.el .
+    cp -pu ${GEN}/ar-navigate-forward-forms.el .
 
     while getopts 123456789abcdefghijklmnopqrstuvwxyz option
 
