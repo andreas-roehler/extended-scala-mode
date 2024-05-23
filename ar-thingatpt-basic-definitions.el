@@ -376,7 +376,7 @@
          ((and (looking-at (concat "[" th-beg-delimiter "]"))
                (save-excursion
                  (and (save-match-data
-                        (and (end-of-form-base (char-to-string (char-after)) (char-to-string (ar--return-complement-char-maybe (char-after))) upper-bound t 0  match-in-comment  nil nil match-in-string)
+                        (and (end-of-form-base (char-to-string (char-after)) (char-to-string (ar--return-complement-char-maybe (char-after))) upper-bound t 0 t nil nil match-in-comment match-in-string)
                              (< orig (point))
                         (setq delimited-end (list (match-beginning 0) (match-end 0))))))))
           (list (match-beginning 0) (match-end 0)))
@@ -1215,11 +1215,15 @@ it would doublequote a word at point "
   (let ((first (cond ((and (listp beg) (not (null beg)))
                       (if no-delimiters
                           (cond
+                           ((numberp (car-safe beg))
+                            (car-safe beg))
                            ((numberp (cadr (flatten-list beg)))
                             (cadr (flatten-list beg)))
                            ((numberp (cdr (flatten-list beg)))
                             (cdr (flatten-list beg))))
-                        (car (flatten-list beg))))
+                        (cond ((numberp (car-safe beg))
+                               (car-safe beg))
+                        (t beg))))
                      (t beg)))
         (second
          (if no-delimiters
@@ -1363,7 +1367,7 @@ it would doublequote a word at point "
                    ((numberp (ignore-errors (cdr (cadr bounds))))
                     (cdr (cadr bounds))))))
 	(goto-char end)
-	(forward-char -1)
+	;; (forward-char -1)
 	(cons (point) (1+ (point))))
     (error (concat (format "%s: " thing) "ar-th-gotoend failed"))))
 
@@ -1741,7 +1745,7 @@ If optional positions BEG-2TH END-2TH are given, works on them instead. "
 	     ;; (end (or (ignore-errors (cdr (cadr bounds)))(ignore-errors (cadr bounds))(ignore-errors (cadr (cadr bounds)))))
              )
         (if (eq thing 'comment)
-            (delete-region beg (1+ end))
+            (delete-region beg (min (point-max) (1+ end)))
           (delete-region beg end)))
     (error nil)))
 

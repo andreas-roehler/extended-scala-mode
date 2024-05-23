@@ -32,7 +32,10 @@
 (require 'ar-thingatpt-utils)
 
 (defun ar-forward-sexp-intern ()
-  (ignore-errors (ar-forward-delimited-atpt)))
+  (cond ((ignore-errors (ar-delimited-atpt))
+         (ar-end-of-delimited-atpt))
+        (t (skip-syntax-forward "^(")
+           (ar-end-of-delimited-atpt))))
 
 (defun ar-backward-sexp-intern ()
   "Internally used.
