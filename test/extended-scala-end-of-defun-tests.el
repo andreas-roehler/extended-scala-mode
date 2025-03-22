@@ -1,4 +1,4 @@
-;;; ar-emacs-scala-end-of-defun-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
+;;; extended-scala-end-of-defun-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2015-2024  Andreas Röhler
 
@@ -23,11 +23,11 @@
 
 ;;; Code:
 
-(require 'ar-emacs-scala-mode-setup-tests)
+(require 'extended-scala-mode-setup-tests)
 
-(setq-local end-of-defun-function #'ar-scala-forward-def-or-class)
+(setq-local end-of-defun-function #'extended-scala-forward-def-or-class)
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-ocYQwh ()
+(ert-deftest extended-scala-end-of-defun-test-ocYQwh ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
@@ -37,7 +37,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-O1YRXs ()
+(ert-deftest extended-scala-end-of-defun-test-O1YRXs ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
@@ -47,7 +47,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-S8VNtl ()
+(ert-deftest extended-scala-end-of-defun-test-S8VNtl ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
@@ -58,7 +58,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-XNuwtY ()
+(ert-deftest extended-scala-end-of-defun-test-XNuwtY ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
@@ -69,7 +69,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-yVEnBi ()
+(ert-deftest extended-scala-end-of-defun-test-yVEnBi ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -93,7 +93,7 @@ assert(result == expected)
     (should (bolp))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-uRKqXt ()
+(ert-deftest extended-scala-end-of-defun-test-uRKqXt ()
   (ar-test-point-min
       "// some comment
 def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
@@ -118,7 +118,7 @@ assert(result == expected)
     (should (bolp))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-CqlQP0 ()
+(ert-deftest extended-scala-end-of-defun-test-CqlQP0 ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -143,7 +143,7 @@ assert(result == expected)
     (should (bolp))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-YcRxyu ()
+(ert-deftest extended-scala-end-of-defun-test-YcRxyu ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -168,7 +168,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-g2JtZe ()
+(ert-deftest extended-scala-end-of-defun-test-g2JtZe ()
   (ar-test-point-min
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -195,7 +195,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-d2KZi1 ()
+(ert-deftest extended-scala-end-of-defun-test-d2KZi1 ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -216,7 +216,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-bZp3fF ()
+(ert-deftest extended-scala-end-of-defun-test-bZp3fF ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -240,7 +240,7 @@ assert(result == expected)
     (should-not (bolp))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-CB1v8d ()
+(ert-deftest extended-scala-end-of-defun-test-CB1v8d ()
   (ar-test-point-min
       "// some comment
 object LargestTree {
@@ -264,7 +264,7 @@ object LargestTree {
     (forward-char -1)
     (should-not (bolp))))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-9Au9zk ()
+(ert-deftest extended-scala-end-of-defun-test-9Au9zk ()
   (ar-test-point-min
       "// some comment
 case class Rectangle(width: Int, height: Int) {
@@ -279,7 +279,7 @@ case class Rectangle(width: Int, height: Int) {
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-8S6M05 ()
+(ert-deftest extended-scala-end-of-defun-test-8S6M05 ()
   (ar-test-point-min
       "// some comment
 case class Rectangle(width: Int, height: Int) {
@@ -294,7 +294,7 @@ case class Rectangle(width: Int, height: Int) {
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-5vQnkh ()
+(ert-deftest extended-scala-end-of-defun-test-5vQnkh ()
   (ar-test-point-min
 "// some comment
 trait Pet {
@@ -308,7 +308,7 @@ trait Pet {
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-45R3LH ()
+(ert-deftest extended-scala-end-of-defun-test-45R3LH ()
   (ar-test-point-min
 "// some comment
 trait Pet {
@@ -323,7 +323,7 @@ trait Pet {
     (should (eq (char-before) ?\)))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-nALcPi ()
+(ert-deftest extended-scala-end-of-defun-test-nALcPi ()
   (ar-test
 "// some comment
 trait Pet {
@@ -340,7 +340,7 @@ trait Pet {
     (should (looking-at "def comeToMaster"))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-L3Ki5e ()
+(ert-deftest extended-scala-end-of-defun-test-L3Ki5e ()
   (ar-test-point-min
 "val expected =  (1.0,3.0,2.0)
 
@@ -369,7 +369,7 @@ assert(result == expected)
     (should (looking-at "def comeToMaster"))
     ))
 
-(ert-deftest ar-emacs-scala-end-of-defun-test-r8Auha ()
+(ert-deftest extended-scala-end-of-defun-test-r8Auha ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -401,5 +401,5 @@ LargestTree.main(Array())
     (should (bolp))
     ))
 
-(provide 'ar-emacs-scala-end-of-defun-tests)
-;;; ar-emacs-scala-end-of-defun-tests.el ends here
+(provide 'extended-scala-end-of-defun-tests)
+;;; extended-scala-end-of-defun-tests.el ends here

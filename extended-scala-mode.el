@@ -1,4 +1,4 @@
-;; ar-emacs-scala-mode.el --- simple electric operator  -*- lexical-binding: t; -*-
+;; extended-scala-mode.el --- simple electric operator  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Andreas Röhler
 
@@ -36,7 +36,7 @@
 (require 'ar-navigate)
 (require 'ar-navigate-backward-forms)
 (require 'ar-navigate-forward-forms)
-(require 'ar-emacs-scala-navigate)
+(require 'extended-scala-navigate)
 
 ;; Constants
 (defconst ar-scala-block-closing-keywords-re
@@ -65,11 +65,11 @@
   "[ \t]*@[^ ]+\\_>[ \n\t]*"
   "Regular expression matching keyword which typically closes a function.")
 
-(defcustom ar-emacs-scala-indent-offset 2
+(defcustom extended-scala-indent-offset 2
   "Amount of offset per level of indentation."
   :type 'integer
-  :tag "ar-emacs-scala-indent-offset")
-(make-variable-buffer-local 'ar-emacs-scala-indent-offset)
+  :tag "extended-scala-indent-offset")
+(make-variable-buffer-local 'extended-scala-indent-offset)
 
 (defcustom ar-scala-outdent-re-raw
   (list
@@ -343,13 +343,13 @@ Second group grabs the name")
       ar-def-re ar-scala-def-re
       ar-class-re ar-scala-class-re
       ar-def-or-class-re ar-scala-def-or-class-re
-      ar-indent-offset ar-emacs-scala-indent-offset
+      ar-indent-offset extended-scala-indent-offset
       ))))
 
 (require 'ar-navigate)
-(require 'ar-emacs-scala-navigate)
+(require 'extended-scala-navigate)
 (require 'ar-navigate-backward-forms)
 (require 'ar-navigate-forward-forms)
 
-(provide 'ar-emacs-scala-mode)
-;;; ar-emacs-scala-mode.el ends here
+(provide 'extended-scala-mode)
+;;; extended-scala-mode.el ends here

@@ -1,6 +1,6 @@
 ;;; ar-navigate.el --- Provide generic navigation -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015-2024  Andreas Röhler
+;; Copyright (C) 2015-2025  Andreas Röhler
 
 ;; Author: Andreas Röhler <andreas.roehler@easy-emacs.de>
 
@@ -1681,7 +1681,7 @@ Optional ENFORCE-REGEXP: search for regexp only."
       ar-def-re ar-scala-def-re
       ar-class-re ar-scala-class-re
       ar-def-or-class-re ar-scala-def-or-class-re
-      ar-indent-offset ar-emacs-scala-indent-offset))))
+      ar-indent-offset extended-scala-indent-offset))))
 
 (defun ar--end-base-intern (regexp &optional orig bol repeat)
   ""

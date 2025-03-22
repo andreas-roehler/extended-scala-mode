@@ -1,4 +1,4 @@
-;; ar-emacs-scala-navigate.el --- simple electric operator  -*- lexical-binding: t; -*-
+;; extended-scala-navigate.el --- simple electric operator  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Andreas Röhler
 
@@ -63,5 +63,5 @@
   (ar-navigate-update-vars 'scala-mode)
   (ar-forward-def-or-class))
 
-(provide 'ar-emacs-scala-navigate)
-;;; ar-emacs-scala-navigate.el ends here
+(provide 'extended-scala-navigate)
+;;; extended-scala-navigate.el ends here

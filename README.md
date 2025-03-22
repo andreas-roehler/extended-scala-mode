@@ -1,4 +1,4 @@
-# ar-emacs-scala-mode
+# extended-scala-mode
 Navigation in Emacs scala-mode 
 
 Jump to beginning or end of function or class

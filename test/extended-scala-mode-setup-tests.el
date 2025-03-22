@@ -1,4 +1,4 @@
-;;; ar-emacs-scala-mode-setup-tests.el --- Provide needed forms -*- lexical-binding: t; -*-
+;;; extended-scala-mode-setup-tests.el --- Provide needed forms -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2015-2024  Andreas Röhler
 
@@ -24,8 +24,8 @@
 ;;; Code:
 
 ;; (require 'ar-subr)
-;; (require 'ar-emacs-scala-mode)
-;; (require 'ar-emacs-scala-navigate)
+;; (require 'extended-scala-mode)
+;; (require 'extended-scala-navigate)
 ;; (require 'ar-navigate)
 ;; (require 'ar-navigate-forward-forms)
 ;; (require 'ar-navigate-backward-forms)
@@ -124,5 +124,5 @@ BODY is code to be executed within the temp buffer.  Point is
        (font-lock-fontify-region (point-min) (point-max))
        ,@body)))
 
-(provide 'ar-emacs-scala-mode-setup-tests)
-;; ar-emacs-scala-mode-setup-tests.el ends here
+(provide 'extended-scala-mode-setup-tests)
+;; extended-scala-mode-setup-tests.el ends here

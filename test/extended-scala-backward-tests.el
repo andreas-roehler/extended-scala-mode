@@ -1,4 +1,4 @@
-;;; ar-emacs-scala-beginning-of-defun-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
+;;; extended-scala-backward-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2015-2024  Andreas Röhler
 
@@ -23,22 +23,20 @@
 
 ;;; Code:
 
-(require 'ar-emacs-scala-mode-setup-tests)
+(require 'extended-scala-mode-setup-tests)
 
-(setq-local beginning-of-defun-function #'ar-scala-backward-def-or-class)
-
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-ocYQwh ()
+(ert-deftest extended-scala-backward-test-ocYQwh ()
   (ar-test
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
-    (beginning-of-defun)
+    (extended-scala-backward-def)
     (should (looking-at "def"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-S8VNtl ()
+(ert-deftest extended-scala-backward-test-S8VNtl ()
   (ar-test
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
@@ -46,11 +44,11 @@
     ar-debug-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
-    (beginning-of-defun)
+    (extended-scala-backward-def)
     (should (looking-at "def"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-wweans ()
+(ert-deftest extended-scala-backward-test-wweans ()
   (ar-test
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -74,11 +72,11 @@ assert(result == expected)
     ar-debug-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
-    (beginning-of-defun)
+    (extended-scala-backward-def)
     (should (looking-at "def multiLeftFoldInt"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-YcRxyu ()
+(ert-deftest extended-scala-backward-test-YcRxyu ()
   (ar-test
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -102,12 +100,11 @@ assert(result == expected)
     ar-debug-p
     (goto-char (point-max))
     (search-backward "length")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position)))
+    (extended-scala-backward-def)
     (should (looking-at "def multiLeftFoldInt"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-g2JtZe ()
+(ert-deftest extended-scala-backward-test-g2JtZe ()
   (ar-test
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -132,11 +129,11 @@ assert(result == expected)
     (goto-char (point-max))
     (search-backward "def")
     (beginning-of-line)
-    (beginning-of-defun)
+    (extended-scala-backward-def)
     (should (looking-at "def aktualisieren"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-d2KZi1 ()
+(ert-deftest extended-scala-backward-test-d2KZi1 ()
   (ar-test
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -154,12 +151,11 @@ assert(result == expected)
     ar-debug-p
     (goto-char (point-max))
     (search-backward "result")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position)))
+    (extended-scala-backward-def)
     (should (looking-at "def main"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-bZp3fF ()
+(ert-deftest extended-scala-backward-test-bZp3fF ()
   (ar-test
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -177,12 +173,11 @@ assert(result == expected)
     ar-debug-p
     (goto-char (point-max))
     (search-backward "largest")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position)))
+    (extended-scala-backward-def)
     (should (looking-at "def main"))
     ))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-CB1v8d ()
+(ert-deftest extended-scala-backward-test-CB1v8d ()
   (ar-test
       "// some comment
 object LargestTree {
@@ -202,10 +197,10 @@ object LargestTree {
     (goto-char (point-max))
     (search-backward "def largest")
     (beginning-of-line)
-    (beginning-of-defun)
+    (extended-scala-backward-def-or-class)
     (should (looking-at "object"))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-9Au9zk ()
+(ert-deftest extended-scala-backward-test-9Au9zk ()
   (ar-test
       "// some comment
 case class Rectangle(width: Int, height: Int) {
@@ -216,10 +211,10 @@ case class Rectangle(width: Int, height: Int) {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (beginning-of-defun)
+    (extended-scala-backward-def-or-class)
     (should (looking-at "case "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-HjAcmj ()
+(ert-deftest extended-scala-backward-test-HjAcmj ()
   (ar-test
 "// some comment
 trait Pet {
@@ -229,10 +224,10 @@ trait Pet {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (beginning-of-defun)
+    (extended-scala-backward-def-or-class)
     (should (looking-at "trait "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-yYjS3s ()
+(ert-deftest extended-scala-backward-test-yYjS3s ()
   (ar-test
 "// some comment
 trait Pet {
@@ -242,10 +237,10 @@ trait Pet {
     'scala-mode
     ar-debug-p
     (goto-char (point-max))
-    (beginning-of-defun)
+    (extended-scala-backward-class)
     (should (looking-at "trait "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-BZ3aQM ()
+(ert-deftest extended-scala-backward-test-BZ3aQM ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -258,11 +253,10 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "min")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position))) 
+    (extended-scala-backward-def)
     (should (looking-at "def "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-YNcqcU ()
+(ert-deftest extended-scala-backward-test-YNcqcU ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -275,11 +269,11 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "min")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position)))
+    (extended-scala-backward-def-or-class)
+    ;; (sit-for 1)
     (should (looking-at "def "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-y9WuQ6 ()
+(ert-deftest extended-scala-backward-test-y9WuQ6 ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -292,10 +286,10 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "D4")
-    (beginning-of-defun)
+    (extended-scala-backward-def-or-class)
     (should (looking-at "def "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-MHFSaE ()
+(ert-deftest extended-scala-backward-test-MHFSaE ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -308,11 +302,12 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "min")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position)))
+    (if (featurep 'extended-scala-mode)
+        (funcall 'extended-scala-backward-def)
+      (funcall 'scala-syntax:beginning-of-definition))
     (should (looking-at "def "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-eznI8K ()
+(ert-deftest extended-scala-backward-test-eznI8K ()
   (ar-test
       "import scala.annotation.tailrec
 
@@ -324,11 +319,12 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
     ar-debug-p
     (goto-char (point-max))
     (search-backward "lengthT")
-    (beginning-of-defun)
-    (message "Reached: %s" (buffer-substring-no-properties (point) (line-end-position)))
-    (should (looking-at "@tailrec def "))))
+    (if (featurep 'extended-scala-mode)
+        (funcall 'extended-scala-backward-def)
+      (funcall 'scala-syntax:beginning-of-definition))
+    (should (looking-at "def "))))
 
-(ert-deftest ar-emacs-scala-beginning-of-defun-test-W1eux3 ()
+(ert-deftest extended-scala-backward-test-W1eux3 ()
   (ar-test
 "import scala.annotation.tailrec
 
@@ -343,8 +339,94 @@ def length[A](xs: Seq[A]): Int = {
     ar-debug-p
     (goto-char (point-max))
     ;; (forward-char -1)
-    (beginning-of-defun)
-    (should (looking-at "def length\\[A]"))))
+    (extended-scala-backward-def-or-class)
+    (should (looking-at "def length" t))))
 
-(provide 'ar-emacs-scala-beginning-of-defun-tests)
-;;; ar-emacs-scala-beginning-of-defun-tests.el ends here
+(ert-deftest extended-scala-backward-test-PFzcBf ()
+  (ar-test
+      "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
+  type Acc = (Seq[(A, A)], Seq[A])
+    // Type alias, for brevity.
+  def init: Acc = (Seq(), Seq())
+  def updater(acc: Acc, x: A): Acc = acc match {
+    case (result, Seq())
+        => (result, Seq(x))
+    case (result, Seq(prev)) => (result :+ ((prev, x)), Seq())
+  }
+  val (result, holdover) = xs.foldLeft(init)(updater)
+    holdover match {
+      // May need to append the last element to the result.
+      case Seq()
+          => result
+      case Seq(x)
+          => result :+ ((x, default))
+    }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (extended-scala-backward-def-or-class)
+    (should (looking-at "def toPairs" t))))
+
+(ert-deftest extended-scala-backward-test-9vHP8b ()
+  (ar-test
+      "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
+  type Acc = (Seq[(A, A)], Seq[A])
+    // Type alias, for brevity.
+  def init: Acc = (Seq(), Seq())
+  def updater(acc: Acc, x: A): Acc = acc match {
+    case (result, Seq())
+        => (result, Seq(x))
+    case (result, Seq(prev)) => (result :+ ((prev, x)), Seq())
+  }
+  val (result, holdover) = xs.foldLeft(init)(updater)
+    holdover match {
+      // May need to append the last element to the result.
+      case Seq()
+          => result
+      case Seq(x)
+          => result :+ ((x, default))
+    }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "case" nil t 3)
+    (beginning-of-line)
+    (extended-scala-backward-def-or-class)
+    (should (looking-at "def updater" t))))
+
+(ert-deftest extended-scala-backward-test-ZB5JkS ()
+  (ar-test
+      "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
+  type Acc = (Seq[(A, A)], Seq[A])
+    // Type alias, for brevity.
+  def init: Acc = (Seq(), Seq())
+  def updater(acc: Acc, x: A): Acc = acc match {
+    case (result, Seq())
+        => (result, Seq(x))
+    case (result, Seq(prev)) => (result :+ ((prev, x)), Seq())
+  }
+  val (result, holdover) = xs.foldLeft(init)(updater)
+    holdover match {
+      // May need to append the last element to the result.
+      case Seq()
+          => result
+      case Seq(x)
+          => result :+ ((x, default))
+    }
+}
+"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (beginning-of-line)
+    (search-backward "}" nil t 2)
+    (end-of-line) 
+    (extended-scala-backward-def-or-class)
+    (should (looking-at "def updater" t))))
+
+
+
+(provide 'extended-scala-backward-tests)
+;;; extended-scala-backward-tests.el ends here

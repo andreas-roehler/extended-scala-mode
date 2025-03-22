@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # Commentary:
 
-# This script tests functions from ar-emacs-scala-mode.
+# This script tests functions from extended-scala-mode.
 
 # Code:
 
@@ -56,7 +56,7 @@ SCALAMODE=$HOME/arbeit/emacs-lisp/emacs-scala-mode
 echo "\$SCALAMODE: $SCALAMODE"
 export SCALAMODE
 
-ARSCALAM=$HOME/werkstatt/ar-emacs-scala-mode
+ARSCALAM=$HOME/werkstatt/extended-scala-mode
 echo "\$ARSCALAM: $ARSCALAM"
 export ARSCALAM
 
@@ -64,7 +64,7 @@ scala -version
 
 IFLOCAL=${IFLOCAL:=1}
 
-SETUP=${TESTDIR}/ar-emacs-scala-mode-setup-tests.el
+SETUP=${TESTDIR}/extended-scala-mode-setup-tests.el
 
 FILE1=${PWD}/ar-subr.el
 FILE2=${PWD}/ar-beg-end.el
@@ -76,15 +76,15 @@ FILE7=${PWD}/ar-navigate.el
 FILE8=${PWD}/ar-navigate-backward-forms.el
 FILE9=${PWD}/ar-navigate-forward-forms.el
 FILE10=${SCALAMODE}/scala-mode.el
-FILE11=${PWD}/ar-emacs-scala-mode.el
-FILE12=${PWD}/ar-emacs-scala-navigate.el
+FILE11=${PWD}/extended-scala-mode.el
+FILE12=${PWD}/extended-scala-navigate.el
 
-TEST1=${TESTDIR}/ar-emacs-scala-backward-nav-tests.el
-TEST2=${TESTDIR}/ar-emacs-scala-forward-nav-tests.el
-TEST3=${TESTDIR}/ar-emacs-scala-beginning-of-defun-tests.el
-TEST4=${TESTDIR}/ar-emacs-scala-end-of-defun-tests.el
-TEST5=${TESTDIR}/ar-emacs-scala3-forward-function-tests.el
-TEST6=${TESTDIR}/ar-emacs-scala3-forward-function-tests-aufrufen.el
+TEST1=${TESTDIR}/extended-scala-backward-nav-tests.el
+TEST2=${TESTDIR}/extended-scala-forward-nav-tests.el
+TEST3=${TESTDIR}/extended-scala-beginning-of-defun-tests.el
+TEST4=${TESTDIR}/extended-scala-end-of-defun-tests.el
+TEST5=${TESTDIR}/extended-scala3-forward-function-tests.el
+TEST6=${TESTDIR}/extended-scala3-forward-function-tests-aufrufen.el
 
 $EMACS -Q --batch --eval "(message (emacs-version))" \
 --eval "(add-to-list 'load-path (getenv \"PWD\"))" \

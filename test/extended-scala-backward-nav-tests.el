@@ -143,8 +143,7 @@ assert(result == expected)
     val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
     val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
     assert(result == expected)
-    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
-
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
   }
 }"
     'scala-mode
@@ -165,7 +164,7 @@ assert(result == expected)
     val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
     val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
     assert(result == expected)
-    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
 
   }
 }"
@@ -188,7 +187,7 @@ object LargestTree {
     val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
     val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
     assert(result == expected)
-    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
 
   }
 }"
@@ -421,10 +420,103 @@ def length[A](xs: Seq[A]): Int = {
     ar-debug-p
     (goto-char (point-max))
     (beginning-of-line)
-    (search-backward "}" nil t 2)
-    (end-of-line) 
+    (search-backward "Seq(prev)")
+    (end-of-line)
     (ar-scala-backward-def-or-class)
     (should (looking-at "def updater" t))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-tGkIa5 ()
+  (ar-test
+      "// some comment
+object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (beginning-of-line)
+    (ar-scala-backward-class)
+    (should (looking-at "object"))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-CUuiEB ()
+  (ar-test
+      "// some comment
+object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (ar-scala-backward-class)
+    (should (looking-at "object"))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-iBzf8i ()
+  (ar-test
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (skip-chars-backward " \t\r\n\f")
+    (forward-char -1)
+    (ar-scala-backward-statement)
+    (should (looking-at "a.map"))))
+
+(ert-deftest ar-emacs-scala-backward-nav-test-nE4BBt ()
+  (ar-test
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+    // a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+    // a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    ar-debug-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (skip-chars-backward " \t\r\n\f")
+    ;; (forward-char -1)
+    (ar-scala-backward-statement)
+    (should (looking-at "a.map"))))
 
 
 
