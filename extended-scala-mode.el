@@ -1,6 +1,6 @@
 ;; extended-scala-mode.el --- simple electric operator  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Andreas Röhler
+;; Copyright (C) 2024-2025  Andreas Röhler
 
 ;; Author: Andreas Röhler <andreas.roehler@online.de>
 ;; Keywords: convenience
@@ -27,329 +27,302 @@
 
 ;; avoid: Warning reference to free variable ‘comint-last-prompt’
 (require 'comint)
-(require 'ar-subr)
-(require 'ar-beg-end)
-(require 'ar-thingatpt-basic-definitions)
-(require 'ar-thingatpt-utils-core)
-(require 'ar-thingatpt-utils)
-(require 'ar-sexp)
-(require 'ar-navigate)
-(require 'ar-navigate-backward-forms)
-(require 'ar-navigate-forward-forms)
-(require 'extended-scala-navigate)
 
-;; Constants
-(defconst ar-scala-block-closing-keywords-re
-  "[ \t]*\\_<\\(return\\|raise\\|break\\|continue\\|pass\\)\\_>[ \n\t]"
-  "Matches the beginning of a class, method or compound statement.")
+(add-to-list 'load-path "..")
+(require 'ar-mode)
 
-(setq ar-scala-block-closing-keywords-re
-  "[ \t]*\\_<\\(return\\|raise\\|break\\|continue\\|pass\\)\\_>[ \n\t]")
+;; (require 'ar-beg-end)
+;; (require 'ar-backward-forms)
+;; (require 'ar-forward-forms)
 
-(defconst ar-scala-finally-re
-  "[ \t]*\\_<finally:"
-  "Regular expression matching keyword which closes a try-block.")
+;; (defconst ar-scala-block-closing-keywords-re
+;;   "[ \t]*\\_<\\(return\\|raise\\|break\\|continue\\|pass\\)\\_>[ \n\t]"
+;;   "Matches the beginning of a class, method or compound statement.")
 
-(defconst ar-scala-except-re "[ \t]*\\_<except\\_>"
-  "Matches the beginning of a ‘except’ block.")
+;; (setq ar-scala-block-closing-keywords-re
+;;   "[ \t]*\\_<\\(return\\|raise\\|break\\|continue\\|pass\\)\\_>[ \n\t]")
 
-;; (defconst ar-scala-except-re
-;;   "[ \t]*\\_<except\\_>[:( \n\t]*"
-;;   "Regular expression matching keyword which composes a try-block.")
+;; (defconst ar-scala-finally-re
+;;   "[ \t]*\\_<finally:"
+;;   "Regular expression matching keyword which closes a try-block.")
 
-(defconst ar-scala-return-re
-  ".*:?[ \t]*\\_<\\(return\\)\\_>[ \n\t]*"
-  "Regular expression matching keyword which typically closes a function.")
+;; (defconst ar-scala-except-re "[ \t]*\\_<except\\_>"
+;;   "Matches the beginning of a ‘except’ block.")
 
-(defconst ar-scala-decorator-re
-  "[ \t]*@[^ ]+\\_>[ \n\t]*"
-  "Regular expression matching keyword which typically closes a function.")
+;; ;; (defconst ar-scala-except-re
+;; ;;   "[ \t]*\\_<except\\_>[:( \n\t]*"
+;; ;;   "Regular expression matching keyword which composes a try-block.")
 
-(defcustom extended-scala-indent-offset 2
-  "Amount of offset per level of indentation."
-  :type 'integer
-  :tag "extended-scala-indent-offset")
-(make-variable-buffer-local 'extended-scala-indent-offset)
+;; (defconst ar-scala-return-re
+;;   ".*:?[ \t]*\\_<\\(return\\)\\_>[ \n\t]*"
+;;   "Regular expression matching keyword which typically closes a function.")
 
-(defcustom ar-scala-outdent-re-raw
-  (list
-   "case"
-   "else"
-   "except"
-   "finally"
-   )
-  "Used by ‘ar-scala-outdent-re’."
-  :type '(repeat string)
-  :tag "ar-scala-outdent-re-raw"
-  :group 'ar-scala-mode
-  )
+;; (defconst ar-scala-decorator-re
+;;   "[ \t]*@[^ ]+\\_>[ \n\t]*"
+;;   "Regular expression matching keyword which typically closes a function.")
 
-(defconst ar-scala-outdent-re
-  (concat
-   "[ \t]*"
-   (regexp-opt ar-scala-outdent-re-raw 'symbols)
-   "[)\t]*")
-  "Regular expression matching statements to be dedented one level.")
+;; (defcustom extended-scala-indent-offset 2
+;;   "Amount of offset per level of indentation."
+;;   :type 'integer
+;;   :tag "extended-scala-indent-offset")
+;; (make-variable-buffer-local 'extended-scala-indent-offset)
 
-(defcustom ar-scala-mark-decorators nil
-  "If decorators should be marked too.
+;; (defcustom ar-scala-outdent-re-raw
+;;   (list
+;;    "case"
+;;    "else"
+;;    "except"
+;;    "finally"
+;;    )
+;;   "Used by ‘ar-scala-outdent-re’."
+;;   :type '(repeat string)
+;;   :tag "ar-scala-outdent-re-raw"
+;;   :group 'ar-scala-mode
+;;   )
 
-Default is nil.
+;; (defconst ar-scala-outdent-re
+;;   (concat
+;;    "[ \t]*"
+;;    (regexp-opt ar-scala-outdent-re-raw 'symbols)
+;;    "[)\t]*")
+;;   "Regular expression matching statements to be dedented one level.")
 
-Also used by navigation"
-  :type 'boolean
-  :tag "ar-scala-mark-decorators"
-  :group 'scala-mode)
+;; (defcustom ar-scala-mark-decorators nil
+;;   "If decorators should be marked too.
 
-(defcustom ar-scala-no-outdent-re-raw
-  (list
-   "break"
-   "continue"
-   "import"
-   "pass"
-   "raise"
-   "return")
-  "Uused by ‘ar-scala-no-outdent-re’."
-  :type '(repeat string)
-  :tag "ar-scala-no-outdent-re-raw"
-  :group 'ar-scala-mode)
+;; Default is nil.
 
-(defconst ar-scala-no-outdent-re
-  (concat
-   "[ \t]*"
-   (regexp-opt ar-scala-no-outdent-re-raw 'symbols)
-   "[)\t]*$")
-"Regular expression matching lines not to augment indent after.
+;; Also used by navigation"
+;;   :type 'boolean
+;;   :tag "ar-scala-mark-decorators"
+;;   :group 'scala-mode)
 
-See ‘ar-scala-no-outdent-re-raw’ for better readable content")
+;; (defcustom ar-scala-no-outdent-re-raw
+;;   (list
+;;    "break"
+;;    "continue"
+;;    "import"
+;;    "pass"
+;;    "raise"
+;;    "return")
+;;   "Uused by ‘ar-scala-no-outdent-re’."
+;;   :type '(repeat string)
+;;   :tag "ar-scala-no-outdent-re-raw"
+;;   :group 'ar-scala-mode)
 
-(defconst ar-scala-assignment-re "\\(\\_<\\w+\\_>[[:alnum:]:, \t]*[ \t]*\\)\\(=\\|+=\\|*=\\|%=\\|&=\\|^=\\|<<=\\|-=\\|/=\\|**=\\||=\\|>>=\\|//=\\)\\(.*\\)"
-  "If looking at the beginning of an assignment.")
+;; (defconst ar-scala-no-outdent-re
+;;   (concat
+;;    "[ \t]*"
+;;    (regexp-opt ar-scala-no-outdent-re-raw 'symbols)
+;;    "[)\t]*$")
+;; "Regular expression matching lines not to augment indent after.
 
-;; 'name':
-(defconst ar-scala-map-re "'\\_<\\w+\\_>':")
+;; See ‘ar-scala-no-outdent-re-raw’ for better readable content")
 
-(defcustom ar-scala-block-re-raw
-  (list
-   "class"
-   "def"
-   "for"
-   "if"
-   "match"
-   "trait"
-   "try"
-   "while"
-   "with"
-   )
-  "Matches the beginning of a compound statement but not it's clause."
-  :type '(repeat string)
-  :tag "ar-scala-block-re-raw"
-  :group 'ar-scala-mode)
+;; (defconst ar-scala-assignment-re "\\(\\_<\\w+\\_>[[:alnum:]:, \t]*[ \t]*\\)\\(=\\|+=\\|*=\\|%=\\|&=\\|^=\\|<<=\\|-=\\|/=\\|**=\\||=\\|>>=\\|//=\\)\\(.*\\)"
+;;   "If looking at the beginning of an assignment.")
 
+;; ;; 'name':
+;; (defconst ar-scala-map-re "'\\_<\\w+\\_>':")
 
-(defconst ar-scala-block-re (concat
-		       ;; "[ \t]*"
-		       (regexp-opt ar-scala-block-re-raw 'symbols)
-		       "[:( \n\t]"
-		       )
-  "Matches the beginning of a compound statement.")
+;; (defcustom ar-scala-block-re-raw
+;;   (list
+;;    "class"
+;;    "def"
+;;    "for"
+;;    "if"
+;;    "match"
+;;    "trait"
+;;    "try"
+;;    "while"
+;;    "with"
+;;    )
+;;   "Matches the beginning of a compound statement but not it's clause."
+;;   :type '(repeat string)
+;;   :tag "ar-scala-block-re-raw"
+;;   :group 'ar-scala-mode)
 
-(defconst ar-block-re ar-scala-block-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-block-re (concat
+;; 		       ;; "[ \t]*"
+;; 		       (regexp-opt ar-scala-block-re-raw 'symbols)
+;; 		       "[:( \n\t]"
+;; 		       )
+;;   "Matches the beginning of a compound statement.")
 
-(defconst ar-scala-minor-block-re-raw (list
-                                      "case"
-				      "except"
-				      "for"
-				      "if"
-                                      "match"
-				      "try"
-				      "with"
-				      )
-  "Matches the beginning of an case ‘for’, ‘if’, ‘try’, ‘except’ or ‘with’ block.")
+;; (defconst ar-block-re ar-scala-block-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-scala-minor-block-re
-  (concat
-   "[ \t]*"
-   (regexp-opt ar-scala-minor-block-re-raw 'symbols)
-   "[:( \n\t]")
+;; (defconst ar-scala-minor-block-re-raw (list
+;;                                       "case"
+;; 				      "except"
+;; 				      "for"
+;; 				      "if"
+;;                                       "match"
+;; 				      "try"
+;; 				      "with"
+;; 				      )
+;;   "Matches the beginning of an case ‘for’, ‘if’, ‘try’, ‘except’ or ‘with’ block.")
 
-  "Regular expression matching lines not to augment indent after.
+;; (defconst ar-scala-minor-block-re
+;;   (concat
+;;    "[ \t]*"
+;;    (regexp-opt ar-scala-minor-block-re-raw 'symbols)
+;;    "[:( \n\t]")
 
-See ‘ar-scala-minor-block-re-raw’ for better readable content")
+;;   "Regular expression matching lines not to augment indent after.
 
-(defconst ar-minor-block-re ar-scala-minor-block-re
-  "Populate ar-navigate.el.")
+;; See ‘ar-scala-minor-block-re-raw’ for better readable content")
 
-(defconst ar-scala-try-re "[ \t]*\\_<try\\_>[: \n\t]"
-  "Matches the beginning of a ‘try’ block.")
+;; (defconst ar-minor-block-re ar-scala-minor-block-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-try-re ar-scala-try-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-try-re "[ \t]*\\_<try\\_>[: \n\t]"
+;;   "Matches the beginning of a ‘try’ block.")
 
-(defconst ar-scala-case-re "[ \t]*\\_<case\\_>[: \t][^:]*:"
-  "Matches a ‘case’ clause.")
+;; (defconst ar-try-re ar-scala-try-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-case-re ar-scala-case-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-case-re "[ \t]*\\_<case\\_>[: \t][^:]*:"
+;;   "Matches a ‘case’ clause.")
 
-(defconst ar-scala-match-case-re "[ \t]*\\_<match\\_>[: \t][^:]*:"
-  "Matches a ‘case’ clause.")
+;; (defconst ar-case-re ar-scala-case-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-match-case-re ar-scala-match-case-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-match-case-re "[ \t]*\\_<match\\_>[: \t][^:]*:"
+;;   "Matches a ‘case’ clause.")
 
-(defconst ar-scala-for-re "[ \t]*\\_<\\(for\\)\\_> +[[:alpha:]_][[:alnum:]_]* +in +[[:alpha:]_][[:alnum:]_()]* *[: \n\t]"
-  "Matches the beginning of a ‘try’ block.")
+;; (defconst ar-match-case-re ar-scala-match-case-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-for-re ar-scala-for-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-for-re "[ \t]*\\_<\\(for\\)\\_> +[[:alpha:]_][[:alnum:]_]* +in +[[:alpha:]_][[:alnum:]_()]* *[: \n\t]"
+;;   "Matches the beginning of a ‘try’ block.")
 
-(defconst ar-scala-if-re "[ \t]*\\_<if\\_> +[^\n\r\f]+ *[: \n\t]"
-  "Matches the beginning of an ‘if’ block.")
+;; (defconst ar-for-re ar-scala-for-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-if-re ar-scala-if-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-if-re "[ \t]*\\_<if\\_> +[^\n\r\f]+ *[: \n\t]"
+;;   "Matches the beginning of an ‘if’ block.")
 
-(defconst ar-scala-else-re "[ \t]*\\_<else:[ \n\t]"
-  "Matches the beginning of an ‘else’ block.")
+;; (defconst ar-if-re ar-scala-if-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-else-re ar-scala-else-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-else-re "[ \t]*\\_<else:[ \n\t]"
+;;   "Matches the beginning of an ‘else’ block.")
 
-(defconst ar-scala-class-re "[ \t]*\\_<\\(class\\|object\\|trait\\)\\_>[ \n\t]"
-  "Matches the beginning of a class definition.")
+;; (defconst ar-else-re ar-scala-else-re
+;;   "Populate ar-navigate.el.")
 
-(defconst ar-class-re ar-scala-class-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-class-re "[ \t]*\\_<\\(class\\|object\\|trait\\)\\_>[ \n\t]"
+;;   "Matches the beginning of a class definition.")
 
-(defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|@tailrec def\\|object\\|trait\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
-  "Matches the beginning of a class- or functions definition.
+;; (defconst ar-class-re ar-scala-class-re
+;;   "Populate ar-navigate.el.")
 
-Second group grabs the name")
+;; (defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(case class\\|class\\|def\\|@tailrec def\\|object\\|trait\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
+;;   "Matches the beginning of a class- or functions definition.
 
-(defvar ar-def-or-class-re ar-scala-def-or-class-re
-  "Populate ar-navigate.el.")
+;; Second group grabs the name")
 
-(defconst ar-scala-def-re "[ \t]*\\_<\\(case class\\|def\\|@tailrec def\\)\\_>[ \n\t]"
-  "Matches the beginning of a functions definition.")
+;; ;; (defvar ar-def-or-class-re ar-scala-def-or-class-re
+;; ;;   "Populate ar-navigate.el.")
 
-(defconst ar-def-re ar-scala-def-re
- "Populate ar-navigate.el.")
+;; (defconst ar-scala-def-re "[ \t]*\\_<\\(case class\\|def\\|@tailrec def\\)\\_>[ \n\t]"
+;;    "Matches the beginning of a functions definition.")
 
-(defcustom ar-scala-block-or-clause-re-raw
-  (list
-   "class"
-   "def"
-   "else"
-   "except"
-   "finally"
-   "for"
-   "if"
-   "trait"
-   "try"
-   "while"
-   "with"
-   "match"
-   "case"
-   )
-  "Matches the beginning of a compound statement or it's clause."
-  :type '(repeat string)
-  :tag "ar-scala-block-or-clause-re-raw"
-  :group 'ar-scala-mode)
+;; ;; (defconst ar-def-re ar-scala-def-re
+;; ;;  "Populate ar-navigate.el.")
 
-(defvar ar-scala-block-or-clause-re
-  (concat
-   "[ \t]*"
-   (regexp-opt  ar-scala-block-or-clause-re-raw 'symbols)
-   "[( \t]*.*:?")
-  "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
+;; (defcustom ar-scala-block-or-clause-re-raw
+;;   (list
+;;    "class"
+;;    "def"
+;;    "else"
+;;    "except"
+;;    "finally"
+;;    "for"
+;;    "if"
+;;    "trait"
+;;    "try"
+;;    "while"
+;;    "with"
+;;    "match"
+;;    "case"
+;;    )
+;;   "Matches the beginning of a compound statement or it's clause."
+;;   :type '(repeat string)
+;;   :tag "ar-scala-block-or-clause-re-raw"
+;;   :group 'ar-scala-mode)
 
-(defconst ar-block-or-clause-re ar-scala-block-or-clause-re
-  "Populate ar-navigate.el.")
+;; (defvar ar-scala-block-or-clause-re
+;;   (concat
+;;    "[ \t]*"
+;;    (regexp-opt  ar-scala-block-or-clause-re-raw 'symbols)
+;;    "[( \t]*.*:?")
+;;   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
 
-(defcustom ar-scala-extended-block-or-clause-re-raw
-  (list
-      "abstract"
-      "case"
-      "catch"
-      "class"
-      "def"
-      "do"
-      "else"
-      "enum"
-      "export"
-      "extends"
-      "final"
-      "finally"
-      "for"
-      "forSome"
-      "given"
-      "if"
-      "implicit"
-      "import"
-      "lazy"
-      "match"
-      "new"
-      "object"
-      "override"
-      "package"
-      "private"
-      "protected"
-      "return"
-      "sealed"
-      "then"
-      "throw"
-      "trait"
-      "try"
-      "type"
-      "val"
-      "var"
-      "while"
-      "with"
-      "yield"
+;; (defconst ar-block-or-clause-re ar-scala-block-or-clause-re
+;;   "Populate ar-navigate.el.")
 
-)
-    "Matches the beginning of a compound statement or it's clause."
-    :type '(repeat string)
-    :tag "ar-scala-extended-block-or-clause-re-raw"
-    :group 'ar-scala-mode)
+;; (defcustom ar-scala-extended-block-or-clause-re-raw
+;;   (list
+;;       "abstract"
+;;       "case"
+;;       "catch"
+;;       "class"
+;;       "def"
+;;       "do"
+;;       "else"
+;;       "enum"
+;;       "export"
+;;       "extends"
+;;       "final"
+;;       "finally"
+;;       "for"
+;;       "forSome"
+;;       "given"
+;;       "if"
+;;       "implicit"
+;;       "import"
+;;       "lazy"
+;;       "match"
+;;       "new"
+;;       "object"
+;;       "override"
+;;       "package"
+;;       "private"
+;;       "protected"
+;;       "return"
+;;       "sealed"
+;;       "then"
+;;       "throw"
+;;       "trait"
+;;       "try"
+;;       "type"
+;;       "val"
+;;       "var"
+;;       "while"
+;;       "with"
+;;       "yield"
 
-(defconst ar-scala-extended-block-or-clause-re
-  (concat
-   "[ \t]*"
-   (regexp-opt  ar-scala-extended-block-or-clause-re-raw 'symbols)
-   "[( \t:]+")
-  "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
+;; )
+;;     "Matches the beginning of a compound statement or it's clause."
+;;     :type '(repeat string)
+;;     :tag "ar-scala-extended-block-or-clause-re-raw"
+;;     :group 'ar-scala-mode)
 
-(defconst ar-extended-block-or-clause-re ar-scala-extended-block-or-clause-re
-  "Populate ar-navigate.el.")
+;; (defconst ar-scala-extended-block-or-clause-re
+;;   (concat
+;;    "[ \t]*"
+;;    (regexp-opt  ar-scala-extended-block-or-clause-re-raw 'symbols)
+;;    "[( \t:]+")
+;;   "See ‘ar-scala-block-or-clause-re-raw’, which it reads.")
 
-(defvar beginning-of-defun-command #'ar-backward-def-or-class)
+;; (defconst ar-extended-block-or-clause-re ar-scala-extended-block-or-clause-re
+;;   "Populate ar-navigate.el.")
 
-(defun ar-navigate-update-vars (mode)
-  (pcase mode
-    (`python-mode
-     (setq-local
-      ar-def-re py-def-re
-      ar-class-re py-class-re
-      ar-def-or-class-re py-def-or-class-re))
-    (`scala-mode
-     (setq-local
-      ar-def-re ar-scala-def-re
-      ar-block-re ar-scala-block-re
-      ar-minor-block-re ar-scala-minor-block-re
-      ar-block-or-clause-re ar-scala-block-or-clause-re
-      ar-def-re ar-scala-def-re
-      ar-class-re ar-scala-class-re
-      ar-def-or-class-re ar-scala-def-or-class-re
-      ar-indent-offset extended-scala-indent-offset
-      ))))
+;; (defvar beginning-of-defun-command #'ar-backward-def-or-class)
 
-(require 'ar-navigate)
-(require 'extended-scala-navigate)
-(require 'ar-navigate-backward-forms)
-(require 'ar-navigate-forward-forms)
+;; (ar-update-vars 'scala-mode)
 
 (provide 'extended-scala-mode)
 ;;; extended-scala-mode.el ends here

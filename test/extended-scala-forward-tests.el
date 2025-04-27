@@ -1,6 +1,6 @@
 ;;; extended-scala-forward-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015-2025  Andreas Röhler
+;; Copyright (C) 2015-2024  Andreas Röhler
 
 ;; Author: Andreas Röhler <andreas.roehler@easy-emacs.de>
 
@@ -23,53 +23,53 @@
 
 ;;; Code:
 
-(require 'extended-scala-mode-setup-tests)
+(require 'ar-setup-tests)
 
-(ert-deftest extended-scala-forward-def-test-ocYQwh ()
+(ert-deftest extended-scala-scala-forward-def-test-ocYQwh ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest extended-scala-forward-def-test-O1YRXs ()
+(ert-deftest extended-scala-scala-forward-def-test-O1YRXs ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest extended-scala-forward-def-test-S8VNtl ()
+(ert-deftest extended-scala-scala-forward-def-test-S8VNtl ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(ert-deftest extended-scala-forward-def-test-XNuwtY ()
+(ert-deftest extended-scala-scala-forward-def-test-XNuwtY ()
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (looking-back "???" (line-beginning-position)))
     ))
 
 
 
-(ert-deftest extended-scala-forward-def-test-yVEnBi ()
+(ert-deftest extended-scala-scala-forward-def-test-yVEnBi ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -87,13 +87,13 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-wweans ()
+(ert-deftest extended-scala-scala-forward-def-test-wweans ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -111,13 +111,13 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-uRKqXt ()
+(ert-deftest extended-scala-scala-forward-def-test-uRKqXt ()
   (ar-test-point-min
       "// some comment
 def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
@@ -136,13 +136,13 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-CqlQP0 ()
+(ert-deftest extended-scala-scala-forward-def-test-CqlQP0 ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -160,13 +160,13 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-YcRxyu ()
+(ert-deftest extended-scala-scala-forward-def-test-YcRxyu ()
   (ar-test-point-min
       "def aktualisieren(p: D4, x: Double): D4 = p match { case (min, max, sum, length) =>
   (math.min(x, min), math.max(x, max), x + sum, length + 1)
@@ -184,14 +184,14 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "}")
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-g2JtZe ()
+(ert-deftest extended-scala-scala-forward-def-test-g2JtZe ()
   (ar-test-point-min
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -212,13 +212,13 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-d2KZi1 ()
+(ert-deftest extended-scala-scala-forward-def-test-d2KZi1 ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -233,13 +233,13 @@ assert(result == expected)
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-test-bZp3fF ()
+(ert-deftest extended-scala-scala-forward-def-test-bZp3fF ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -254,16 +254,16 @@ assert(result == expected)
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward " main")
-    (extended-scala-forward-def)
+    (ar-forward-def)
     (should (eq (char-before) ?}))
     (forward-char -1)
     (should-not (bolp))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-CB1v8d ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-CB1v8d ()
   (ar-test-point-min
       "// some comment
 object LargestTree {
@@ -279,15 +279,15 @@ object LargestTree {
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "expected")
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (eq (char-before) ?}))
     (forward-char -1)
     (should-not (bolp))))
 
-(ert-deftest extended-scala-forward-def-or-class-test-9Au9zk ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-9Au9zk ()
   (ar-test-point-min
       "// some comment
 case class Rectangle(width: Int, height: Int) {
@@ -296,13 +296,13 @@ case class Rectangle(width: Int, height: Int) {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-8S6M05 ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-8S6M05 ()
   (ar-test-point-min
       "// some comment
 case class Rectangle(width: Int, height: Int) {
@@ -311,13 +311,13 @@ case class Rectangle(width: Int, height: Int) {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-5vQnkh ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-5vQnkh ()
   (ar-test-point-min
 "// some comment
 trait Pet {
@@ -325,13 +325,13 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (eq (char-before) ?}))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-45R3LH ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-45R3LH ()
   (ar-test-point-min
 "// some comment
 trait Pet {
@@ -339,14 +339,14 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "def")
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (eq (char-before) ?\)))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-nALcPi ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-nALcPi ()
   (ar-test
 "// some comment
 trait Pet {
@@ -355,15 +355,15 @@ trait Pet {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "//" nil t 2)
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (back-to-indentation)
     (should (looking-at "def comeToMaster"))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-L3Ki5e ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-L3Ki5e ()
   (ar-test-point-min
 "val expected =  (1.0,3.0,2.0)
 
@@ -386,13 +386,13 @@ assert(result == expected)
 
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (should (looking-back "expected)" (line-beginning-position)))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-r8Auha ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-r8Auha ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -417,16 +417,16 @@ LargestTree.main(Array())
 // solution2.1.7.10_object_main result: List(List(50, 30, 10), List(100), List(200, 20, 2))
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (back-to-indentation)
     (should (eq (char-after) ?}))
     (should (bolp))
     ))
 
 
-(ert-deftest extended-scala-forward-def-or-class-test-lGhLdK ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-lGhLdK ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -451,16 +451,16 @@ LargestTree.main(Array())
 // solution2.1.7.10_object_main result: List(List(50, 30, 10), List(100), List(200, 20, 2))
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-line) 
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (back-to-indentation)
     (should (eq (char-after) ?}))
     (should (bolp))
     ))
 
-(ert-deftest extended-scala-forward-def-or-class-test-RZEaEC ()
+(ert-deftest extended-scala-scala-forward-def-or-class-test-RZEaEC ()
   (ar-test-point-min
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -477,10 +477,10 @@ LargestTree.main(Array())
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "largest")
-    (extended-scala-forward-def-or-class)
+    (ar-forward-def-or-class)
     (back-to-indentation)
     (should (eq (char-after) ?}))
     (should-not (eq (char-before) 20))

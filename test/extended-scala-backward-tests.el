@@ -23,32 +23,32 @@
 
 ;;; Code:
 
-(require 'extended-scala-mode-setup-tests)
+(require 'ar-setup-tests)
 
-(ert-deftest extended-scala-backward-test-ocYQwh ()
+(ert-deftest extended-scala-scala-backward-test-ocYQwh ()
   (ar-test
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def"))
     ))
 
-(ert-deftest extended-scala-backward-test-S8VNtl ()
+(ert-deftest extended-scala-scala-backward-test-S8VNtl ()
   (ar-test
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def"))
     ))
 
-(ert-deftest extended-scala-backward-test-wweans ()
+(ert-deftest extended-scala-scala-backward-test-wweans ()
   (ar-test
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -69,14 +69,14 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def multiLeftFoldInt"))
     ))
 
-(ert-deftest extended-scala-backward-test-YcRxyu ()
+(ert-deftest extended-scala-scala-backward-test-YcRxyu ()
   (ar-test
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -97,14 +97,14 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "length")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def multiLeftFoldInt"))
     ))
 
-(ert-deftest extended-scala-backward-test-g2JtZe ()
+(ert-deftest extended-scala-scala-backward-test-g2JtZe ()
   (ar-test
       "type D4 = (Double, Double, Double, Int)
 // val a: Seq[Double] =  List(1.0, 2.0, 3.4)
@@ -125,15 +125,15 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "def")
     (beginning-of-line)
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def aktualisieren"))
     ))
 
-(ert-deftest extended-scala-backward-test-d2KZi1 ()
+(ert-deftest extended-scala-scala-backward-test-d2KZi1 ()
   (ar-test
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -143,19 +143,18 @@ assert(result == expected)
     val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
     val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
     assert(result == expected)
-    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
-
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "result")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def main"))
     ))
 
-(ert-deftest extended-scala-backward-test-bZp3fF ()
+(ert-deftest extended-scala-scala-backward-test-bZp3fF ()
   (ar-test
 "object LargestTree {
   def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
@@ -165,19 +164,19 @@ assert(result == expected)
     val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
     val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
     assert(result == expected)
-    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
 
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "largest")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def main"))
     ))
 
-(ert-deftest extended-scala-backward-test-CB1v8d ()
+(ert-deftest extended-scala-scala-backward-test-CB1v8d ()
   (ar-test
       "// some comment
 object LargestTree {
@@ -188,19 +187,19 @@ object LargestTree {
     val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
     val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
     assert(result == expected)
-    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\n\".format(result))
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
 
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "def largest")
     (beginning-of-line)
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "object"))))
 
-(ert-deftest extended-scala-backward-test-9Au9zk ()
+(ert-deftest extended-scala-scala-backward-test-9Au9zk ()
   (ar-test
       "// some comment
 case class Rectangle(width: Int, height: Int) {
@@ -209,12 +208,12 @@ case class Rectangle(width: Int, height: Int) {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "case "))))
 
-(ert-deftest extended-scala-backward-test-HjAcmj ()
+(ert-deftest extended-scala-scala-backward-test-HjAcmj ()
   (ar-test
 "// some comment
 trait Pet {
@@ -222,12 +221,12 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "trait "))))
 
-(ert-deftest extended-scala-backward-test-yYjS3s ()
+(ert-deftest extended-scala-scala-backward-test-yYjS3s ()
   (ar-test
 "// some comment
 trait Pet {
@@ -235,12 +234,12 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
-    (extended-scala-backward-class)
+    (ar-backward-class)
     (should (looking-at "trait "))))
 
-(ert-deftest extended-scala-backward-test-BZ3aQM ()
+(ert-deftest extended-scala-scala-backward-test-BZ3aQM ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -250,13 +249,13 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "min")
-    (extended-scala-backward-def)
+    (ar-backward-def)
     (should (looking-at "def "))))
 
-(ert-deftest extended-scala-backward-test-YNcqcU ()
+(ert-deftest extended-scala-scala-backward-test-YNcqcU ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -266,14 +265,14 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "min")
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     ;; (sit-for 1)
     (should (looking-at "def "))))
 
-(ert-deftest extended-scala-backward-test-y9WuQ6 ()
+(ert-deftest extended-scala-scala-backward-test-y9WuQ6 ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -283,13 +282,13 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "D4")
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "def "))))
 
-(ert-deftest extended-scala-backward-test-MHFSaE ()
+(ert-deftest extended-scala-scala-backward-test-MHFSaE ()
   (ar-test
 "// some comment
 def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
@@ -299,15 +298,15 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "min")
-    (if (featurep 'extended-scala-mode)
-        (funcall 'extended-scala-backward-def)
+    (if (featurep 'extended-scala-scala-mode)
+        (funcall 'ar-backward-def)
       (funcall 'scala-syntax:beginning-of-definition))
     (should (looking-at "def "))))
 
-(ert-deftest extended-scala-backward-test-eznI8K ()
+(ert-deftest extended-scala-scala-backward-test-eznI8K ()
   (ar-test
       "import scala.annotation.tailrec
 
@@ -316,15 +315,15 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
   else lengthT(s.tail, res + 1)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "lengthT")
-    (if (featurep 'extended-scala-mode)
-        (funcall 'extended-scala-backward-def)
+    (if (featurep 'extended-scala-scala-mode)
+        (funcall 'ar-backward-def)
       (funcall 'scala-syntax:beginning-of-definition))
     (should (looking-at "def "))))
 
-(ert-deftest extended-scala-backward-test-W1eux3 ()
+(ert-deftest extended-scala-scala-backward-test-W1eux3 ()
   (ar-test
 "import scala.annotation.tailrec
 
@@ -336,13 +335,13 @@ def length[A](xs: Seq[A]): Int = {
   lengthT(xs, 0)
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     ;; (forward-char -1)
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "def length" t))))
 
-(ert-deftest extended-scala-backward-test-PFzcBf ()
+(ert-deftest extended-scala-scala-backward-test-PFzcBf ()
   (ar-test
       "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
   type Acc = (Seq[(A, A)], Seq[A])
@@ -363,12 +362,12 @@ def length[A](xs: Seq[A]): Int = {
     }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "def toPairs" t))))
 
-(ert-deftest extended-scala-backward-test-9vHP8b ()
+(ert-deftest extended-scala-scala-backward-test-9vHP8b ()
   (ar-test
       "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
   type Acc = (Seq[(A, A)], Seq[A])
@@ -389,14 +388,14 @@ def length[A](xs: Seq[A]): Int = {
     }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "case" nil t 3)
     (beginning-of-line)
-    (extended-scala-backward-def-or-class)
+    (ar-backward-def-or-class)
     (should (looking-at "def updater" t))))
 
-(ert-deftest extended-scala-backward-test-ZB5JkS ()
+(ert-deftest extended-scala-scala-backward-test-ZB5JkS ()
   (ar-test
       "def toPairs[A](xs: Seq[A], default: A): Seq[(A, A)] = {
   type Acc = (Seq[(A, A)], Seq[A])
@@ -418,15 +417,107 @@ def length[A](xs: Seq[A]): Int = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (beginning-of-line)
-    (search-backward "}" nil t 2)
-    (end-of-line) 
-    (extended-scala-backward-def-or-class)
+    (search-backward "Seq(prev)")
+    (end-of-line)
+    (ar-backward-def-or-class)
     (should (looking-at "def updater" t))))
 
+(ert-deftest extended-scala-scala-backward-test-tGkIa5 ()
+  (ar-test
+      "// some comment
+object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
 
+  }
+}"
+    'scala-mode
+    'ar-verbose-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (beginning-of-line)
+    (ar-backward-class)
+    (should (looking-at "object"))))
+
+(ert-deftest extended-scala-scala-backward-test-CUuiEB ()
+  (ar-test
+      "// some comment
+object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    'ar-verbose-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (ar-backward-class)
+    (should (looking-at "object"))))
+
+(ert-deftest extended-scala-scala-backward-test-iBzf8i ()
+  (ar-test
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    'ar-verbose-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (skip-chars-backward " \t\r\n\f")
+    (forward-char -1)
+    (ar-backward-statement)
+    (should (looking-at "a.map"))))
+
+(ert-deftest extended-scala-scala-backward-test-nE4BBt ()
+  (ar-test
+"object LargestTree {
+  def largestTree(a: Seq[List[Int]]): Seq[List[Int]] = {
+    a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+    // a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+    // a.map{ k=>k.sortBy(k=>(-k))}.map{ k => k.take(3) }
+  }
+  def main(args: Array[String]) {
+    val expected = Seq(List(50, 30, 10), List(100), List(200, 20, 2))
+    val result =  this.largestTree(Seq(List(50, 30, 10), List(100), List(200, 20, 2)))
+    assert(result == expected)
+    if (result == expected) println(\"solution2.1.7.10_object_main result: %s\".format(result))
+
+  }
+}"
+    'scala-mode
+    'ar-verbose-p
+    (goto-char (point-max))
+    (search-backward "def main")
+    (skip-chars-backward " \t\r\n\f")
+    (beginning-of-line) 
+    ;; (forward-char -1)
+    (ar-backward-statement)
+    (should (looking-at "a.map"))))
 
 (provide 'extended-scala-backward-tests)
 ;;; extended-scala-backward-tests.el ends here

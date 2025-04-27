@@ -23,7 +23,7 @@
 
 ;;; Code:
 
-(require 'extended-scala-mode-setup-tests)
+(require 'ar-setup-tests)
 
 (setq-local beginning-of-defun-function #'extended-scala-backward-def-or-class)
 
@@ -31,7 +31,7 @@
   (ar-test
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
     (beginning-of-defun)
@@ -43,7 +43,7 @@
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
     (beginning-of-defun)
@@ -71,7 +71,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (skip-chars-backward " \t\r\n\f")
     (beginning-of-defun)
@@ -99,7 +99,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "length")
     (beginning-of-defun)
@@ -128,7 +128,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "def")
     (beginning-of-line)
@@ -151,7 +151,7 @@ assert(result == expected)
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "result")
     (beginning-of-defun)
@@ -174,7 +174,7 @@ assert(result == expected)
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "largest")
     (beginning-of-defun)
@@ -198,7 +198,7 @@ object LargestTree {
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "def largest")
     (beginning-of-line)
@@ -214,7 +214,7 @@ case class Rectangle(width: Int, height: Int) {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (beginning-of-defun)
     (should (looking-at "case "))))
@@ -227,7 +227,7 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (beginning-of-defun)
     (should (looking-at "trait "))))
@@ -240,7 +240,7 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (beginning-of-defun)
     (should (looking-at "trait "))))
@@ -255,7 +255,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "min")
     (beginning-of-defun)
@@ -272,7 +272,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "min")
     (beginning-of-defun)
@@ -289,7 +289,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "D4")
     (beginning-of-defun)
@@ -305,7 +305,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "min")
     (beginning-of-defun)
@@ -321,7 +321,7 @@ def multiLeftFoldInt(a: Seq[Double]): (Double, Double, Double) = {
   else lengthT(s.tail, res + 1)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "lengthT")
     (beginning-of-defun)
@@ -340,7 +340,7 @@ def length[A](xs: Seq[A]): Int = {
   lengthT(xs, 0)
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     ;; (forward-char -1)
     (beginning-of-defun)

@@ -18,6 +18,9 @@
 
 # Code:
 
+# cp -pu $(../ar-*.el) .
+# cp -pu ../test/ar-setup-tests.el test/ar-setup-tests.el
+
 if [ $1 == e25 ]; then
     export EMACS=$(echo $(alias $1) | sed "s,alias [^~]*.\([^ ]*\).*,$HOME\1,g")
 elif
@@ -36,9 +39,13 @@ elif
 elif
     [ $1 == e30 ];then
     export EMACS=$(echo $(alias $1) | sed "s,alias [^~]*.\([^ ]*\).*,$HOME\1,g")
+elif
+    [ $1 == en ];then
+    export EMACS=$(echo $(alias $1) | sed "s,alias [^~]*.\([^ ]*\).*,$HOME\1,g")
 else
     EMACS=emacs
 fi
+
 
 #  EMACS=emacs
 echo "before shift \$EMACS: $EMACS"
@@ -48,72 +55,62 @@ echo "\$*: $*"
 PDIR=$PWD
 echo "\$PWD: $PWD"
 
-TESTDIR=${PWD}/test
-export TESTDIR
-echo "\$TESTDIR: $TESTDIR"
+GEN=${PWD%/*}
+export GEN
+echo "\$GEN: $GEN"
 
 SCALAMODE=$HOME/arbeit/emacs-lisp/emacs-scala-mode
 echo "\$SCALAMODE: $SCALAMODE"
 export SCALAMODE
 
-ARSCALAM=$HOME/werkstatt/extended-scala-mode
+TESTDIR=${PWD}/test
+export TESTDIR
+echo "\$TESTDIR: $TESTDIR"
+
+export ARSCALAM=$HOME/werkstatt/extended-scala-mode
 echo "\$ARSCALAM: $ARSCALAM"
 export ARSCALAM
 
-scala -version
+# scala -version
 
 IFLOCAL=${IFLOCAL:=1}
 
-SETUP=${TESTDIR}/extended-scala-mode-setup-tests.el
+# if [ $IFLOCAL -eq 0 ]; then
+    
+#     export GEN=$HOME/werkstatt/emacs-generics
+# fi
 
-FILE1=${PWD}/ar-subr.el
-FILE2=${PWD}/ar-beg-end.el
-FILE3=${PWD}/ar-thingatpt-basic-definitions.el
-FILE4=${PWD}/ar-thingatpt-utils-core.el
-FILE5=${PWD}/ar-thingatpt-utils.el
-FILE6=${PWD}/ar-sexp.el
-FILE7=${PWD}/ar-navigate.el
-FILE8=${PWD}/ar-navigate-backward-forms.el
-FILE9=${PWD}/ar-navigate-forward-forms.el
-FILE10=${SCALAMODE}/scala-mode.el
-FILE11=${PWD}/extended-scala-mode.el
-FILE12=${PWD}/extended-scala-navigate.el
 
-TEST1=${TESTDIR}/extended-scala-backward-nav-tests.el
-TEST2=${TESTDIR}/extended-scala-forward-nav-tests.el
+SETUP=${TESTDIR}/ar-setup-tests.el
+
+
+FILE1=${GEN}/ar-mode.el
+FILE2=${PWD}/extended-scala-mode.el
+
+TEST1=${TESTDIR}/extended-scala-backward-tests.el
+TEST2=${TESTDIR}/extended-scala-forward-tests.el
 TEST3=${TESTDIR}/extended-scala-beginning-of-defun-tests.el
 TEST4=${TESTDIR}/extended-scala-end-of-defun-tests.el
 TEST5=${TESTDIR}/extended-scala3-forward-function-tests.el
 TEST6=${TESTDIR}/extended-scala3-forward-function-tests-aufrufen.el
 
-$EMACS -Q --batch --eval "(message (emacs-version))" \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
---eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
---eval "(require 'scala-mode)" \
---eval "(message \"scala-mode: %s\" (buffer-file-name (car (find-function-noselect 'scala-mode))))" \
---eval "(message \"beginning-of-defun-function: %s\" beginning-of-defun-function)" \
---eval "(message \"end-of-defun-function: %s\" end-of-defun-function)"
+$EMACS -Q --batch --eval "(message (emacs-version))"
 
 h1 () {
     $EMACS -Q --batch \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
 --eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
 --eval "(require 'scala-mode)" \
---load /home/speck/arbeit/emacs-lisp/emacs-scala-mode/scala-mode.el \
+--eval "(add-to-list 'load-path (getenv \"GEN\"))" \
+--eval "(require 'ar-mode)" \
+--eval "(add-to-list 'load-path (getenv \"PWD\"))" \
+--eval "(require 'extended-scala-mode)" \
+--eval "(message \"beginning-of-defun-function: %s\" beginning-of-defun-function)" \
+-eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
+-load $FILE1 \
+--eval "(require 'ar-mode)" \
+-load $FILE2 \
 --eval "(message \"beginning-of-defun-function: %s\" beginning-of-defun-function)" \
 --eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
--load $FILE1 \
--load $FILE2 \
--load $FILE3 \
--load $FILE4 \
--load $FILE5 \
--load $FILE6 \
--load $FILE7 \
--load $FILE8 \
--load $FILE9 \
--load $FILE10 \
--load $FILE11 \
--load $FILE12 \
 \
 -load $SETUP \
 -load $TEST1 \
@@ -262,20 +259,6 @@ entfernt () {
 
 if [ $IFLOCAL -eq 0 ]; then
     
-    WCO=$HOME/werkstatt/thingatpt-utils-core
-    ATPT=$HOME/werkstatt/thing-at-point-utils
-    GEN=$HOME/werkstatt/emacs-generics
-    
-    cp -pu ${WCO}/ar-subr.el .
-    cp -pu ${WCO}/ar-beg-end.el .
-    cp -pu ${WCO}/ar-thingatpt-basic-definitions.el .
-    cp -pu ${WCO}/ar-thingatpt-utils-core.el .
-    cp -pu ${ATPT}/ar-thingatpt-utils.el .
-    cp -pu ${ATPT}/ar-sexp.el .
-    cp -pu ${GEN}/ar-navigate.el .
-    cp -pu ${GEN}/ar-navigate-backward-forms.el .
-    cp -pu ${GEN}/ar-navigate-forward-forms.el .
-
     while getopts 123456789abcdefghijklmnopqrstuvwxyz option
 
     do

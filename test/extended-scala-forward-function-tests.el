@@ -1,4 +1,4 @@
-;;; ar-emacs-scala-forward-function-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
+;;; extended-scala-forward-function-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2015-2024  Andreas Röhler
 
@@ -24,9 +24,9 @@
 ;;; Code:
 
 (require 'ert)
-(require 'ar-emacs-scala-mode-setup-tests)
+(require 'ar-setup-tests)
 
-(defun ar-emacs-scala-forward-def-test-ocYQwh ()
+(defun extended-scala-forward-def-test-ocYQwh ()
   ""
   (interactive)
   (with-temp-buffer
@@ -37,7 +37,7 @@
     (ar-scala-forward-def)
     (should (looking-back "???" (line-beginning-position)))))
 
-(defun ar-emacs-scala-forward-def-test-O1YRXs ()
+(defun extended-scala-forward-def-test-O1YRXs ()
   ""
 (interactive)
   (with-temp-buffer
@@ -49,7 +49,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(defun ar-emacs-scala-forward-def-test-S8VNtl ()
+(defun extended-scala-forward-def-test-S8VNtl ()
   ""
 (interactive)
   (with-temp-buffer
@@ -62,7 +62,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(defun ar-emacs-scala-forward-def-test-XNuwtY ()
+(defun extended-scala-forward-def-test-XNuwtY ()
   ""
 (interactive)
   (with-temp-buffer
@@ -75,7 +75,7 @@
     (should (looking-back "???" (line-beginning-position)))
     ))
 
-(defun ar-emacs-scala-forward-def-test-yVEnBi ()
+(defun extended-scala-forward-def-test-yVEnBi ()
   ""
 (interactive)
   (with-temp-buffer
@@ -101,7 +101,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-wweans ()
+(defun extended-scala-forward-def-test-wweans ()
   ""
 (interactive)
   (with-temp-buffer
@@ -127,7 +127,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-uRKqXt ()
+(defun extended-scala-forward-def-test-uRKqXt ()
   ""
 (interactive)
   (with-temp-buffer
@@ -154,7 +154,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-CqlQP0 ()
+(defun extended-scala-forward-def-test-CqlQP0 ()
   ""
 (interactive)
   (with-temp-buffer
@@ -180,7 +180,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-YcRxyu ()
+(defun extended-scala-forward-def-test-YcRxyu ()
   ""
 (interactive)
   (with-temp-buffer
@@ -207,7 +207,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-g2JtZe ()
+(defun extended-scala-forward-def-test-g2JtZe ()
   ""
 (interactive)
   (with-temp-buffer
@@ -236,7 +236,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-d2KZi1 ()
+(defun extended-scala-forward-def-test-d2KZi1 ()
   ""
 (interactive)
   (with-temp-buffer
@@ -259,7 +259,7 @@ assert(result == expected)
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-test-bZp3fF ()
+(defun extended-scala-forward-def-test-bZp3fF ()
   ""
 (interactive)
   (with-temp-buffer
@@ -284,7 +284,7 @@ assert(result == expected)
     (forward-char -1)
     (should-not (bolp))))
 
-(defun ar-emacs-scala-forward-def-or-class-test-CB1v8d ()
+(defun extended-scala-forward-def-or-class-test-CB1v8d ()
   ""
 (interactive)
   (with-temp-buffer
@@ -310,7 +310,7 @@ object LargestTree {
     (forward-char -1)
     (should-not (bolp))))
 
-(defun ar-emacs-scala-forward-def-or-class-test-9Au9zk ()
+(defun extended-scala-forward-def-or-class-test-9Au9zk ()
   ""
 (interactive)
   (with-temp-buffer
@@ -326,7 +326,7 @@ case class Rectangle(width: Int, height: Int) {
     (ar-scala-forward-def-or-class)
     (should (eq (char-before) ?}))))
 
-(defun ar-emacs-scala-forward-def-or-class-test-8S6M05 ()
+(defun extended-scala-forward-def-or-class-test-8S6M05 ()
   ""
 (interactive)
   (with-temp-buffer
@@ -343,7 +343,7 @@ case class Rectangle(width: Int, height: Int) {
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-or-class-test-5vQnkh ()
+(defun extended-scala-forward-def-or-class-test-5vQnkh ()
   ""
 (interactive)
   (with-temp-buffer
@@ -359,7 +359,7 @@ trait Pet {
     (should (eq (char-before) ?}))
     ))
 
-(defun ar-emacs-scala-forward-def-or-class-test-45R3LH ()
+(defun extended-scala-forward-def-or-class-test-45R3LH ()
   ""
 (interactive)
   (with-temp-buffer
@@ -376,7 +376,7 @@ trait Pet {
     (should (eq (char-before) ?\)))
     ))
 
-(defun ar-emacs-scala-forward-def-or-class-test-nALcPi ()
+(defun extended-scala-forward-def-or-class-test-nALcPi ()
   ""
   (interactive)
   (with-temp-buffer
@@ -394,7 +394,7 @@ trait Pet {
     (back-to-indentation)
     (should (looking-at "def comeToMaster"))))
 
-(defun ar-emacs-scala-forward-def-or-class-test-L3Ki5e ()
+(defun extended-scala-forward-def-or-class-test-L3Ki5e ()
   ""
 (interactive)
   (with-temp-buffer
@@ -423,7 +423,7 @@ assert(result == expected)
     (ar-scala-forward-def-or-class)
     (should (looking-back "expected)" (line-beginning-position)))))
 
-(defun ar-emacs-scala-forward-def-or-class-test-r8Auha ()
+(defun extended-scala-forward-def-or-class-test-r8Auha ()
   ""
 (interactive)
   (with-temp-buffer
@@ -457,7 +457,7 @@ LargestTree.main(Array())
     (should (eq (char-after) ?}))
     (should (bolp))))
 
-(defun ar-emacs-scala-forward-def-or-class-test-lGhLdK ()
+(defun extended-scala-forward-def-or-class-test-lGhLdK ()
   ""
 (interactive)
   (with-temp-buffer
@@ -493,7 +493,7 @@ LargestTree.main(Array())
     (should (bolp))
     ))
 
-(defun ar-emacs-scala-forward-def-or-class-test-RZEaEC ()
+(defun extended-scala-forward-def-or-class-test-RZEaEC ()
    ""
    (interactive)
    (with-temp-buffer
@@ -536,5 +536,5 @@ LargestTree.main(Array())
 }
 "
 
-(provide 'ar-emacs-scala-forward-function-tests)
-;;; ar-emacs-scala-forward-function-tests.el ends here
+(provide 'extended-scala-forward-function-tests)
+;;; extended-scala-forward-function-tests.el ends here

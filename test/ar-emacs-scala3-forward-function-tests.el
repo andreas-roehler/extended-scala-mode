@@ -24,7 +24,7 @@
 ;;; Code:
 
 (require 'ert)
-;; (require 'ar-emacs-scala3-mode-setup-tests)
+(require 'ar-setup-tests)
 
 (defun ar-emacs-scala3-forward-def-test-ocYQwh ()
   ""

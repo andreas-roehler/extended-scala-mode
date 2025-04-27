@@ -23,7 +23,7 @@
 
 ;;; Code:
 
-(require 'extended-scala-mode-setup-tests)
+(require 'ar-setup-tests)
 
 (setq-local end-of-defun-function #'extended-scala-forward-def-or-class)
 
@@ -31,7 +31,7 @@
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (looking-back "???" (line-beginning-position)))
@@ -41,7 +41,7 @@
   (ar-test-point-min
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] = ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (looking-back "???" (line-beginning-position)))
@@ -52,7 +52,7 @@
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (looking-back "???" (line-beginning-position)))
@@ -63,7 +63,7 @@
       "def foo(p: Seq[String], q: Seq[Int]): Map[Int, String] =
   ???"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (looking-back "???" (line-beginning-position)))
@@ -87,7 +87,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (bolp))
@@ -112,7 +112,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (bolp))
@@ -136,7 +136,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "math")
     (end-of-defun)
@@ -161,7 +161,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "}")
     (end-of-defun)
@@ -189,7 +189,7 @@ val expected =  (1.0,3.0,2.0)
 assert(result == expected)
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (eq (char-before) ?}))
@@ -210,7 +210,7 @@ assert(result == expected)
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (eq (char-before) ?}))
@@ -231,7 +231,7 @@ assert(result == expected)
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward " main")
     (end-of-defun)
@@ -256,7 +256,7 @@ object LargestTree {
   }
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "expected")
     (end-of-defun)
@@ -273,7 +273,7 @@ case class Rectangle(width: Int, height: Int) {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (eq (char-before) ?}))
@@ -288,7 +288,7 @@ case class Rectangle(width: Int, height: Int) {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (eq (char-before) ?}))
@@ -302,7 +302,7 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (should (eq (char-before) ?}))
@@ -316,7 +316,7 @@ trait Pet {
     def comeToMaster(): Unit      // abstract
 }"
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (search-forward "def")
     (end-of-defun)
@@ -332,7 +332,7 @@ trait Pet {
 }
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-max))
     (search-backward "//" nil t 2)
     (end-of-defun)
@@ -362,7 +362,7 @@ assert(result == expected)
 
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (back-to-indentation)
@@ -394,7 +394,7 @@ LargestTree.main(Array())
 // solution2.1.7.10_object_main result: List(List(50, 30, 10), List(100), List(200, 20, 2))
 "
     'scala-mode
-    ar-debug-p
+    'ar-verbose-p
     (goto-char (point-min))
     (end-of-defun)
     (back-to-indentation)
