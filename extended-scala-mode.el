@@ -329,11 +329,12 @@
 
 (add-to-list 'load-path (expand-file-name  ".."))
 
-;; loads the mode-specific passiv data types
-(require 'ar-vars)
-
 ;; loads the generic functions
 (require 'ar-mode)
+
+;; loads the mode-specific passiv data types
+(add-to-list 'load-path (expand-file-name  "."))
+(require 'ar-scala-vars)
 
 (add-to-list 'auto-mode-alist
                '("\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'" . scala-mode))
@@ -775,7 +776,6 @@
     (ar-define-menu ar-mode-map))
   (force-mode-line-update)
   )
-
 
 (provide 'extended-scala-mode)
 ;;; extended-scala-mode.el ends here
