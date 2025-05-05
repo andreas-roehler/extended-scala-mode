@@ -23,8 +23,7 @@
 
 ;;; Code:
 
-(require 'ert)
-(require 'ar-setup-tests)
+(require 'ar-setup-ert-tests)
 
 (defun ar-emacs-scala3-forward-def-test-ocYQwh ()
   ""

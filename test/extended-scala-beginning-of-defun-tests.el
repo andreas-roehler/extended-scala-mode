@@ -23,7 +23,7 @@
 
 ;;; Code:
 
-(require 'ar-setup-tests)
+(require 'ar-setup-ert-tests)
 
 (setq-local beginning-of-defun-function #'extended-scala-backward-def-or-class)
 

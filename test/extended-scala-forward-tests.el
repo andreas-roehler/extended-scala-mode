@@ -23,7 +23,7 @@
 
 ;;; Code:
 
-(require 'ar-setup-tests)
+(require 'ar-setup-ert-tests)
 
 (ert-deftest extended-scala-scala-forward-def-test-ocYQwh ()
   (ar-test-point-min

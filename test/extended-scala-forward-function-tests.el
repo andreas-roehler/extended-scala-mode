@@ -23,8 +23,7 @@
 
 ;;; Code:
 
-(require 'ert)
-(require 'ar-setup-tests)
+(require 'ar-setup-ert-tests)
 
 (defun extended-scala-forward-def-test-ocYQwh ()
   ""

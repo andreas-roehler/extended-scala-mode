@@ -23,7 +23,7 @@
 
 ;;; Code:
 
-(require 'ar-setup-tests)
+(require 'ar-setup-ert-tests)
 
 (ert-deftest extended-scala-scala-backward-test-ocYQwh ()
   (ar-test
@@ -514,7 +514,7 @@ object LargestTree {
     (goto-char (point-max))
     (search-backward "def main")
     (skip-chars-backward " \t\r\n\f")
-    (beginning-of-line) 
+    (beginning-of-line)
     ;; (forward-char -1)
     (ar-backward-statement)
     (should (looking-at "a.map"))))
