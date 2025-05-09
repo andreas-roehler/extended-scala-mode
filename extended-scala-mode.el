@@ -343,6 +343,84 @@
   (set (make-local-variable 'indent-tabs-mode) py-indent-tabs-mode)
   )
 
+(setq extended-scala-mode-map
+      (let ((map (make-sparse-keymap)))
+        ;; electric keys
+        (define-key map [(:)] (quote ar-electric-colon))
+        (define-key map [(\#)] (quote ar-electric-comment))
+        (define-key map [(delete)] (quote ar-electric-delete))
+        (define-key map [(control backspace)] (quote ar-hungry-delete-backwards))
+        (define-key map [(control c) (delete)] (quote ar-hungry-delete-forward))
+        ;; (define-key map [(control y)] (quote ar-electric-yank))
+        ;; moving point
+        (define-key map [(control c) (control p)] (quote ar-backward-statement))
+        (define-key map [(control c) (control n)] (quote ar-forward-statement))
+        (define-key map [(control c) (control u)] (quote ar-backward-block))
+        (define-key map [(control c) (control q)] (quote ar-forward-block))
+        (define-key map [(control meta a)] (quote ar-backward-def-or-class))
+        (define-key map [(control meta e)] (quote ar-forward-def-or-class))
+        ;; (define-key map [(meta i)] (quote ar-indent-forward-line))
+        ;; (define-key map [(control j)] (quote ar-newline-and-indent))
+	(define-key map (kbd "C-j") (quote newline))
+        ;; Most Pythoneers expect RET ‘ar-newline-and-indent’
+	;; which is default of var ar-return-key’
+        (define-key map (kbd "RET") ar-return-key)
+        ;; (define-key map (kbd "RET") (quote newline))
+        ;; (define-key map (kbd "RET") (quote ar-newline-and-dedent))
+        (define-key map [(super backspace)] (quote ar-dedent))
+        ;; (define-key map [(control return)] (quote ar-newline-and-dedent))
+        ;; indentation level modifiers
+        (define-key map [(control c) (control l)] (quote ar-shift-left))
+        (define-key map [(control c) (control r)] (quote ar-shift-right))
+        (define-key map [(control c) (<)] (quote ar-shift-left))
+        (define-key map [(control c) (>)] (quote ar-shift-right))
+        ;; (define-key map [(control c) (tab)] (quote ar-indent-region))
+	(define-key map (kbd "C-c TAB") (quote ar-indent-region))
+        (define-key map [(control c) (:)] (quote ar-guess-indent-offset))
+        ;; subprocess commands
+        (define-key map [(control c) (control c)] (quote ar-execute-buffer))
+        (define-key map [(control c) (control m)] (quote ar-execute-import-or-reload))
+        (define-key map [(control c) (control s)] (quote ar-execute-string))
+        (define-key map [(control c) (|)] (quote ar-execute-region))
+        (define-key map [(control meta x)] (quote ar-execute-def-or-class))
+        (define-key map [(control c) (!)] (quote ar-shell))
+        (define-key map [(control c) (control t)] (quote ar-toggle-shell))
+        (define-key map [(control meta h)] (quote ar-mark-def-or-class))
+        (define-key map [(control c) (control k)] (quote ar-mark-block-or-clause))
+        (define-key map [(control c) (.)] (quote ar-expression))
+        (define-key map [(control c) (?,)] (quote ar-partial-expression))
+        ;; Miscellaneous
+        ;; (define-key map [(super q)] (quote ar-coar-statement))
+        (define-key map [(control c) (control d)] (quote ar-pdbtrack-toggle-stack-tracking))
+        (define-key map [(control c) (control f)] (quote ar-sort-imports))
+        (define-key map [(control c) (\#)] (quote ar-comment-region))
+        (define-key map [(control c) (\?)] (quote ar-describe-mode))
+        (define-key map [(control c) (control e)] (quote ar-help-at-point))
+        (define-key map [(control c) (-)] (quote ar-up-exception))
+        (define-key map [(control c) (=)] (quote ar-down-exception))
+        (define-key map [(control x) (n) (d)] (quote ar-narrow-to-def-or-class))
+        ;; information
+        (define-key map [(control c) (control b)] (quote ar-submit-bug-report))
+        (define-key map [(control c) (control v)] (quote ar-version))
+        (define-key map [(control c) (control w)] (quote ar-pychecker-run))
+        ;; (define-key map (kbd "TAB") (quote ar-indent-line))
+        (define-key map (kbd "TAB") (quote ar-indent-line))
+	;; (if ar-complete-function
+        ;;     (progn
+        ;;       (define-key map [(meta tab)] ar-complete-function)
+        ;;       (define-key map [(esc) (tab)] ar-complete-function))
+        ;;   (define-key map [(meta tab)] (quote ar-shell-complete))
+        ;;   (define-key map [(esc) (tab)] (quote ar-shell-complete)))
+        (substitute-key-definition (quote complete-symbol) (quote completion-at-point)
+                                   map global-map)
+        (substitute-key-definition (quote backward-up-list) (quote ar-up)
+                                   map global-map)
+        (substitute-key-definition (quote down-list) (quote ar-down)
+                                   map global-map)
+	(when ar-use-menu-p
+	  (setq map (ar-define-menu map)))
+        map))
+
 (define-derived-mode extended-scala-mode scala-mode "Escm"
   "Based an a generic mode"
   (setq-local
@@ -697,7 +775,7 @@
   (set (make-local-variable 'tab-width) ar-indent-offset)
   (set (make-local-variable 'electric-indent-mode) nil)
   (and ar-load-skeletons-p (ar-load-skeletons))
-  (and ar-guess-py-install-directory-p (ar-set-load-path))
+  (and ar-guess-ar-install-directory-p (ar-set-load-path))
   ;; (and ar-autopair-mode
   ;;      (declare-function autopair-python-triple-quote-action "autopair" ())
   ;;      (declare-function autopair-default-handle-action "autopair" ())
@@ -764,10 +842,15 @@
     (set (make-local-variable 'end-of-defun-function) 'ar-forward-def-or-class)
     (define-key ar-mode-map [(control meta a)] 'ar-backward-def-or-class)
     (define-key ar-mode-map [(control meta e)] 'ar-forward-def-or-class))
+  (define-key extended-scala-mode-map [(control meta)(a)] 'ar-backward-def-or-class)
+  (define-key extended-scala-mode-map [(control meta)(e)] 'ar-forward-def-or-class)
+  (define-key extended-scala-mode-map [(meta f3)] 'ar-insert-java-style-comment)
+  ;; (define-key extended-scala-mode-map [(meta f3)] 'ar-align-symbol)
+  (define-key extended-scala-mode-map [(super j)] 'ar-compute-indentation)
+  (ar-toggle-ar-verbose-p)
   (when ar-sexp-use-expression-p
     (define-key ar-mode-map [(control meta f)] 'ar-forward-expression)
     (define-key ar-mode-map [(control meta b)] 'ar-backward-expression))
-
   (when ar-hide-show-minor-mode-p (hs-minor-mode 1))
   (when ar-outline-minor-mode-p (outline-minor-mode 1))
   (when (and ar-debug-p (called-interactively-p 'any))
