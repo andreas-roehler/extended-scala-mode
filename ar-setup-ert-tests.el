@@ -1,0 +1,66 @@
+;;; ar-setup-ert-tests.el --- Provide needed forms -*- lexical-binding: t; -*-
+
+;; URL: https://gitlab.com/ar-mode-devs
+;; Keywords: lisp
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;; Code:
+
+;; (require 'org)
+
+;; (setq ar-debug-p t)
+
+;; (if (file-readable-p "../ar-mode.el")
+;;     (load (expand-file-name "../ar-mode.el") nil t)
+;;   (when (file-readable-p "../ar-mode.el")
+;;     (load (expand-file-name "../ar-mode.el") nil t)))
+
+;; (require 'font-lock)
+
+
+
+(defmacro ar-test (contents mode verbose &rest body)
+  "Create temp buffer inserting CONTENTS.
+
+BODY is code to be executed within the temp buffer "
+  (declare (indent 1) (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode ar--imenu-create-index-p)
+       (insert ,contents)
+       (funcall ,mode)
+       (when ,verbose
+	 (switch-to-buffer (current-buffer))
+	 (font-lock-fontify-region (point-min)(point-max)))
+       ,@body)))
+
+(defmacro ar-test-point-min (contents mode verbose &rest body)
+  "Create temp buffer inserting CONTENTS.
+BODY is code to be executed within the temp buffer.  Point is
+ at the beginning of buffer."
+  (declare (debug t))
+  `(with-temp-buffer
+     (let (hs-minor-mode ar--imenu-create-index-p)
+       (insert ,contents)
+       (funcall ,mode)
+       (goto-char (point-min))
+       (when ,verbose
+	 (switch-to-buffer (current-buffer))
+	 (font-lock-fontify-region (point-min)(point-max)))
+       ,@body)))
+
+(provide 'ar-setup-ert-tests)
+;; ar-setup-ert-tests.el ends here

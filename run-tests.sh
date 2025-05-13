@@ -81,7 +81,7 @@ IFLOCAL=${IFLOCAL:=1}
 # fi
 
 
-SETUP=${GEN}/ar-setup-ert-tests.el
+SETUP=${PWD}/ar-setup-ert-tests.el
 
 
 FILE1=${GEN}/ar-mode.el
