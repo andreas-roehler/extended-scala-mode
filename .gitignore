@@ -14,5 +14,3 @@ test/ar*.scala
 zu-ablage.sh
 test/ein.el
 ein.el
-test/#*
-test/*.scala
