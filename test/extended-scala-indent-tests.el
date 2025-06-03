@@ -1,6 +1,6 @@
-;;; extended-scala-backward-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
+;;; extended-scala-indent-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015-2024  Andreas Röhler
+;; Copyright (C) 2015-2025  Andreas Röhler
 
 ;; Author: Andreas Röhler <andreas.roehler@easy-emacs.de>
 
@@ -25,7 +25,7 @@
 
 (require 'ar-setup-ert-tests)
 
-(ert-deftest extended-scala-scala-backward-test-NE01iv ()
+(ert-deftest extended-scala-indent-test-NE01iv ()
   (ar-test
 "def removeKIntern[A](k: Int, xs: Seq[A], res: Seq[A] = Nil): Seq[A] = {
   if (xs.isEmpty) res.reverse
@@ -42,6 +42,24 @@
     (search-backward "else" nil t 3)
     (should (eq 2 (ar-compute-indentation)))))
 
+(ert-deftest extended-scala-indent-test-f905o5 ()
+  (ar-test
+"def removeKIntern[A](k: Int, xs: Seq[A], res: Seq[A] = Nil): Seq[A] = {
+  if (xs.isEmpty) res.reverse
+  else
+    if (res.isEmpty) removeKIntern(k, xs.tail, xs.head +: res)
+    else
+      if (res.filter(_ == xs.head).length < k) removeKIntern(k, xs.tail, xs.head +: res)
+      else
+        removeKIntern(k, xs.tail, res)
+}"
+    'scala-mode
+    'ar-verbose-p
+    (goto-char (point-max))
+    (search-backward "if" nil t 2)
+    (should (eq 4 (ar-compute-indentation)))))
 
-(provide 'extended-scala-backward-tests)
-;;; extended-scala-backward-tests.el ends here
+
+
+(provide 'extended-scala-indent-tests)
+;;; extended-scala-indent-tests.el ends here

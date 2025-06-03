@@ -1,6 +1,6 @@
 ;;; extended-scala-forward-function-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015-2024  Andreas Röhler
+;; Copyright (C) 2015-2025  Andreas Röhler
 
 ;; Author: Andreas Röhler <andreas.roehler@easy-emacs.de>
 

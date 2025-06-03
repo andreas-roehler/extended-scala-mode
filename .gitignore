@@ -11,5 +11,8 @@ hs_err_pid*
 run-travis-ci.sh
 test/ar*.scala
 zu-ablage.sh
+test/*.scala
+test/#*
 test/ein.el
 ein.el
+test/Backtrace.el

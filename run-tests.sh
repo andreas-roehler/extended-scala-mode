@@ -87,12 +87,13 @@ SETUP=${PWD}/ar-setup-ert-tests.el
 FILE1=${GEN}/ar-mode.el
 FILE2=${PWD}/extended-scala-mode.el
 
-TEST1=${TESTDIR}/extended-scala-backward-tests.el
-TEST2=${TESTDIR}/extended-scala-forward-tests.el
-TEST3=${TESTDIR}/extended-scala-beginning-of-defun-tests.el
-TEST4=${TESTDIR}/extended-scala-end-of-defun-tests.el
-TEST5=${TESTDIR}/extended-scala3-forward-function-tests.el
-TEST6=${TESTDIR}/extended-scala3-forward-function-tests-aufrufen.el
+TEST1=${TESTDIR}/extended-scala-indent-tests.el
+TEST2=${TESTDIR}/extended-scala-backward-tests.el
+TEST3=${TESTDIR}/extended-scala-forward-tests.el
+TEST4=${TESTDIR}/extended-scala-beginning-of-defun-tests.el
+TEST5=${TESTDIR}/extended-scala-end-of-defun-tests.el
+TEST6=${TESTDIR}/extended-scala4-forward-function-tests.el
+TEST7=${TESTDIR}/extended-scala4-forward-function-tests-aufrufen.el
 
 $EMACS -Q --batch --eval "(message (emacs-version))"
 

@@ -18,20 +18,7 @@
 
 ;;; Commentary:
 
-;;; Code:
-
-;; (require 'org)
-
 ;; (setq ar-debug-p t)
-
-;; (if (file-readable-p "../ar-mode.el")
-;;     (load (expand-file-name "../ar-mode.el") nil t)
-;;   (when (file-readable-p "../ar-mode.el")
-;;     (load (expand-file-name "../ar-mode.el") nil t)))
-
-;; (require 'font-lock)
-
-
 
 (defmacro ar-test (contents mode verbose &rest body)
   "Create temp buffer inserting CONTENTS.

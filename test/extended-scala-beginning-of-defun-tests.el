@@ -1,6 +1,6 @@
 ;;; extended-scala-beginning-of-defun-tests.el --- Test scala-mode navigation  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015-2024  Andreas Röhler
+;; Copyright (C) 2015-2025  Andreas Röhler
 
 ;; Author: Andreas Röhler <andreas.roehler@easy-emacs.de>
 
@@ -25,7 +25,7 @@
 
 (require 'ar-setup-ert-tests)
 
-(setq-local beginning-of-defun-function #'extended-scala-backward-def-or-class)
+;; (setq-local beginning-of-defun-function #'extended-scala-backward-def-or-class)
 
 (ert-deftest extended-scala-beginning-of-defun-test-ocYQwh ()
   (ar-test
