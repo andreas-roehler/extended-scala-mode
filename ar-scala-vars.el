@@ -2751,18 +2751,62 @@ See ‘ar-scala-no-outdent-re-raw’ for better readable content")
 		       )
   "Matches the beginning of a compound statement.")
 
-(defconst ar-scala-minor-block-re-raw (list
-				      "async for"
-				      "async with"
-                                      "case"
-				      "except"
-				      "for"
-				      "if"
-                                      "match"
-				      "try"
-				      "with"
-				      )
-  "Matches the beginning of an case ‘for’, ‘if’, ‘try’, ‘except’ or ‘with’ block.")
+
+;; (defconst scala-syntax:other-keywords-unsafe-re
+;;   (regexp-opt '("abstract" "case" "catch" "class" "def" "do" "else" "enum"
+;;                 "export" "extends" "final" "finally" "for" "given" "forSome"
+;;                 "if" "implicit" "import" "lazy" "match" "new" "object"
+;;                 "override" "package" "private" "protected" "return" "sealed"
+;;                 "then" "throw" "trait" "try" "type" "val" "var" "while"
+;;                 "with" "yield"
+;;                 ;; "Soft" keywords https://dotty.epfl.ch/docs/internals/syntax.html#soft-keywords
+;;                 ;; Presumably this means they do not apply in all contexts. Do
+;;                 ;; not know of a way to support this in Emacs, so preferring
+;;                 ;; supporting them everywhere, as regular keywords.
+;;                 "as" "derives" "end" "extension" "inline" "opaque" "open"
+;;                 "transparent" "using") 'words))
+
+(defconst ar-scala-minor-block-re-raw
+  (list
+   "abstract"
+   "case"
+   "catch"
+   "class"
+   "do"
+   "else"
+   "enum"
+   "export"
+   "extends"
+   "final"
+   "finally"
+   "for"
+   "given"
+   "forSome"
+   "if"
+   "implicit"
+   "import"
+   "lazy"
+   "match"
+   "new"
+   "object"
+   "override"
+   "package"
+   "private"
+   "protected"
+   "return"
+   "sealed"
+   "then"
+   "throw"
+   "trait"
+   "try"
+   "type"
+   "val"
+   "var"
+   "while"
+   "with"
+   "yield"
+   )
+  "")
 
 (defconst ar-scala-minor-block-re
   (concat
