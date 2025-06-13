@@ -33,7 +33,7 @@
 (require 'ar-mode)
 (require 'ar-scala-vars)
 
-(require 'ar-extended-modes)
+;; (require 'ar-extended-modes)
 
 (add-to-list 'auto-mode-alist
              '("\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'" . scala-mode))
@@ -116,7 +116,6 @@
 	(when ar-use-menu-p
 	  (setq map (ar-define-menu map)))
         (setq
-
          ar--docbeg ar--docbeg
          ar--edit-register ar--edit-register
          ar--editbeg ar--editbeg
@@ -415,6 +414,13 @@
 )
 
         map))
+
+(define-minor-mode extended-scala-mode ""
+         :lighter "E"
+         :require 'scala-mode
+         :require 'ar-scala-vars
+         (all-mode-setting)
+         (force-mode-line-update))
 
 (provide 'extended-scala-mode)
 ;;; extended-scala-mode.el ends here

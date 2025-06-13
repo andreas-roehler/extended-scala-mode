@@ -243,10 +243,10 @@ Default is t"
   :safe 'booleanp)
 
 (defvar ar-scala-chars-before " \t\n\r\f"
-  "Used by ‘ar-scala-scala--string-strip’.")
+  "Used by ‘ar-scala--string-strip’.")
 
 (defvar ar-scala-chars-after " \t\n\r\f"
-    "Used by ‘ar-scala-scala--string-strip’.")
+    "Used by ‘ar-scala--string-strip’.")
 
 (defcustom ar-scala-max-help-buffer-p nil
   "If \"\*Python-Help\*\"-buffer should appear as the only visible.
@@ -340,7 +340,7 @@ Default is nil")
  where write-access is not given."
 
  :type 'boolean
- :tag "ar-scala-scala--execute-use-temp-file-p"
+ :tag "ar-scala--execute-use-temp-file-p"
  :group 'ar-scala-mode)
 
 (defvar ar-scala--match-paren-forward-p nil
@@ -502,7 +502,7 @@ Might not be TRT when a lot of output arrives"
 (defcustom ar-scala-modeline-display-full-path-p nil
   "If the full PATH/TO/PYTHON be in modeline.
 
-Default is nil. Note: when ‘ar-scala-scala-command’ is
+Default is nil. Note: when ‘ar-scala-command’ is
 specified with path, it is shown as an acronym in
 ‘buffer-name’ already."
 
@@ -543,7 +543,7 @@ See var ‘ar-scala-return-result-p’ and command ‘ar-scala-toggle-ar-return-
 (defvar ar-scala-error nil
   "Takes the error-messages from Python process.")
 
-(defvar ar-scala-scala-completions "*Python Completions*"
+(defvar ar-scala-completions "*Python Completions*"
   "Buffer name for Python-shell completions, internally used.")
 
 (defvar ar-scala-ipython-completions "*IPython Completions*"
@@ -1236,17 +1236,17 @@ Before returning to previous position."
   :tag "ar-scala-current-defun-delay"
   :group 'ar-scala-mode)
 
-(defcustom ar-scala-scala-send-delay 1
-  "Seconds to wait for output, used by ‘ar-scala-scala--send-...’ functions.
+(defcustom ar-scala-send-delay 1
+  "Seconds to wait for output, used by ‘ar-scala--send-...’ functions.
 
 See also ‘ar-scala-ipython-send-delay’"
 
   :type 'number
-  :tag "ar-scala-scala-send-delay"
+  :tag "ar-scala-send-delay"
   :group 'ar-scala-mode)
 
 (defcustom ar-scala-python3-send-delay 1
-  "Seconds to wait for output, used by ‘ar-scala-scala--send-...’ functions.
+  "Seconds to wait for output, used by ‘ar-scala--send-...’ functions.
 
 See also ‘ar-scala-ipython-send-delay’"
 
@@ -1255,9 +1255,9 @@ See also ‘ar-scala-ipython-send-delay’"
   :group 'ar-scala-mode)
 
 (defcustom ar-scala-ipython-send-delay 1
-  "Seconds to wait for output, used by ‘ar-scala-scala--send-...’ functions.
+  "Seconds to wait for output, used by ‘ar-scala--send-...’ functions.
 
-See also ‘ar-scala-scala-send-delay’"
+See also ‘ar-scala-send-delay’"
 
   :type 'number
   :tag "ar-scala-ipython-send-delay"
@@ -1512,18 +1512,18 @@ Used when ‘ar-scala-honor-IPYTHONDIR-p’ is nil - th default"
   "When non-nil ar-scala-history file is set by $PYTHONHISTORY.
 
 Default is nil.
-Otherwise value of ‘ar-scala-scala-history’ is used."
+Otherwise value of ‘ar-scala-history’ is used."
   :type 'boolean
   :tag "ar-scala-honor-PYTHONHISTORY-p"
   :group 'ar-scala-mode)
 
-(defcustom ar-scala-scala-history "~/.python_history"
+(defcustom ar-scala-history "~/.python_history"
   "Python-history default file.
 
 Used when ‘ar-scala-honor-PYTHONHISTORY-p’ is nil (default)."
 
   :type 'string
-  :tag "ar-scala-scala-history"
+  :tag "ar-scala-history"
   :group 'ar-scala-mode)
 
 (defcustom ar-scala-switch-buffers-on-execute-p nil
@@ -1652,7 +1652,7 @@ At any case only current input gets fontified."
 ;; "
 ;;   :group 'ar-scala-mode)
 
-(defcustom ar-scala-scala-command
+(defcustom ar-scala-command
   (if (eq system-type 'windows-nt)
       ;; "C:\\Python27\\python.exe"
       "python"
@@ -1669,17 +1669,17 @@ With Anaconda for example the following works here:
 Else /usr/bin/python"
 
   :type 'string
-  :tag "ar-scala-scala-command
+  :tag "ar-scala-command
 "
   :group 'ar-scala-mode)
 
-(defvar ar-scala-shell-name ar-scala-scala-command)
-;; (defvaralias 'ar-scala-shell-name 'ar-scala-scala-command)
+(defvar ar-scala-shell-name ar-scala-command)
+;; (defvaralias 'ar-scala-shell-name 'ar-scala-command)
 
-(defcustom ar-scala-scala-command-args '("-i")
+(defcustom ar-scala-command-args '("-i")
   "String arguments to be used when starting a Python shell."
   :type '(repeat string)
-  :tag "ar-scala-scala-command-args"
+  :tag "ar-scala-command-args"
   :group 'ar-scala-mode)
 
 (defcustom ar-scala-python2-command
@@ -1816,7 +1816,7 @@ Default /usr/bin/jython"
 
 Of functions and global variables."
   :type 'boolean
-  :tag "ar-scala-scala--imenu-create-index-p"
+  :tag "ar-scala--imenu-create-index-p"
   :group 'ar-scala-mode)
 
 (defvar ar-scala-history-filter-regexp "\\‘\\s-*\\S-?\\S-?\\s-*\\'\\|''’/tmp/"
@@ -1921,7 +1921,7 @@ Default is t. See lp:1100892"
 
 WRT previous Python-mode sessions. See also lp:987534."
   :type 'boolean
-  :tag "ar-scala-scala--warn-tmp-files-left-p"
+  :tag "ar-scala--warn-tmp-files-left-p"
   :group 'ar-scala-mode)
 
 (defcustom ar-scala-complete-ac-sources '(ac-source-pycomplete)
@@ -1960,13 +1960,13 @@ If ‘ar-scala-use-local-default’ is non-nil."
   :tag "ar-scala-shell-local-path"
   :group 'ar-scala-mode)
 
-(defcustom ar-scala-scala-edit-version "python3"
+(defcustom ar-scala-edit-version "python3"
   "Default is \"python3\".
 
 When empty, version is guessed via ‘ar-scala-choose-shell’."
 
   :type 'string
-  :tag "ar-scala-scala-edit-version"
+  :tag "ar-scala-edit-version"
   :group 'ar-scala-mode)
 
 (defcustom ar-scala-ipython-execute-delay 0.3
@@ -2016,16 +2016,16 @@ Use the following as the value of this variable:
   "';'.join(module_completion('''%s'''))"
   "See also ‘ar-scala-ipython-module-completion-code’.")
 
-(defcustom ar-scala--imenu-create-index-function 'ar-scala-scala--imenu-index
-  "Switch between ‘ar-scala-scala--imenu-create-index-new’  and series 5. index-machine."
+(defcustom ar-scala--imenu-create-index-function 'ar-scala--imenu-index
+  "Switch between ‘ar-scala--imenu-create-index-new’  and series 5. index-machine."
   :type '(choice
-	  (const :tag "'ar-scala-scala--imenu-create-index-new, also lists modules variables " ar-scala--imenu-create-index-new)
+	  (const :tag "'ar-scala--imenu-create-index-new, also lists modules variables " ar-scala--imenu-create-index-new)
 
-	  (const :tag "ar-scala-scala--imenu-create-index, series 5. index-machine" ar-scala--imenu-create-index)
-	  (const :tag "ar-scala-scala--imenu-index, honor type annotations" ar-scala--imenu-index)
+	  (const :tag "ar-scala--imenu-create-index, series 5. index-machine" ar-scala--imenu-create-index)
+	  (const :tag "ar-scala--imenu-index, honor type annotations" ar-scala--imenu-index)
 
 	  )
-  :tag "ar-scala-scala--imenu-create-index-function"
+  :tag "ar-scala--imenu-create-index-function"
   :group 'ar-scala-mode)
 
 (defvar ar-scala-line-re "^"
@@ -2565,7 +2565,7 @@ See also ‘ar-scala-assignment-re’")
 
 A subsequent ‘ar-scala-up-exception’ needs the line number where the region
 started, in order to jump to the correct file line.
-This variable is set in ‘ar-scala-execute-region’ and used in ‘ar-scala-scala--jump-to-exception’.")
+This variable is set in ‘ar-scala-execute-region’ and used in ‘ar-scala--jump-to-exception’.")
 
 (defvar ar-scala-match-paren-no-use-syntax-pps nil)
 
@@ -3017,7 +3017,7 @@ hooked into ‘compilation-error-regexp-alist’"
   "Serialize tests employing dolist.")
 
 (defcustom ar-scala-shell-unfontify-p t
-  "Run ‘ar-scala-scala--run-unfontify-timer’ unfontifying the shell banner-text.
+  "Run ‘ar-scala--run-unfontify-timer’ unfontifying the shell banner-text.
 
 Default is nil"
 
@@ -3031,7 +3031,7 @@ Default is nil"
   "If t, track source from shell-buffer.
 
 Default is t.
-Add hook \\='comint-output-filter-functions \\='ar-scala-scala--pdbtrack-track-stack-file"
+Add hook \\='comint-output-filter-functions \\='ar-scala--pdbtrack-track-stack-file"
 
   :type 'boolean
   :tag "pdb-track-stack-from-shell-p"
@@ -3070,7 +3070,7 @@ If you ignore the location `M-x ar-scala-guess-pdb-path' might display it."
   :tag "ar-scala-pdb-path"
   :group 'ar-scala-mode)
 
-(defvar ar-scala-scala-ms-pdb-command ""
+(defvar ar-scala-ms-pdb-command ""
   "MS-systems might use that.")
 
 (defcustom ar-scala-shell-prompt-pdb-regexp "[(<]*[Ii]?[Pp]db[>)]+ "
@@ -3142,10 +3142,10 @@ to paths in Emacs."
 (defvar ar-scala-pdbtrack-is-tracking-p nil)
 
 (defvar ar-scala--docbeg nil
-  "Internally used by ‘ar-scala-scala--write-edit’.")
+  "Internally used by ‘ar-scala--write-edit’.")
 
 (defvar ar-scala--docend nil
-  "Internally used by ‘ar-scala-scala--write-edit’.")
+  "Internally used by ‘ar-scala--write-edit’.")
 
 (defvar ar-scala-completion-setup-code  "def __PYTHON_EL_get_completions(text):
     completions = []
@@ -3377,7 +3377,7 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
   :tag "ar-scala-default-working-directory"
   :group 'ar-scala-mode)
 
-(defcustom ar-scala-scala-ffap-setup-code
+(defcustom ar-scala-ffap-setup-code
   "
 def __FFAP_get_module_path(objstr):
     try:
@@ -3398,7 +3398,7 @@ def __FFAP_get_module_path(objstr):
         return ''"
   "Python code to get a module path."
   :type 'string
-  :tag "ar-scala-scala-ffap-setup-code"
+  :tag "ar-scala-ffap-setup-code"
   :group 'ar-scala-mode)
 
 ;; (defvar ar-scala-ffap-string-code
@@ -3409,7 +3409,7 @@ def __FFAP_get_module_path(objstr):
   "__FFAP_get_module_path('''%s''')"
   "Python code used to get a string with the path of a module."
   :type 'string
-  :tag "ar-scala-scala-ffap-string-code"
+  :tag "ar-scala-ffap-string-code"
   :group 'ar-scala-mode)
 
 (defvar ar-scala-mode-map nil)
