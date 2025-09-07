@@ -81,8 +81,8 @@ IFLOCAL=${IFLOCAL:=1}
 # fi
 
 
-SETUP=${PWD}/ar-setup-ert-tests.el
-
+SETUP=ar-setup-ert-tests.el
+echo "\$SETUP: $SETUP"
 
 FILE1=${GEN}/ar-mode.el
 FILE2=${PWD}/extended-scala-mode.el
@@ -105,6 +105,7 @@ h1 () {
 --eval "(require 'ar-mode)" \
 --eval "(add-to-list 'load-path (getenv \"PWD\"))" \
 --eval "(require 'extended-scala-mode)" \
+--eval "(extended-scala-mode)" \
 --eval "(message \"beginning-of-defun-function: %s\" beginning-of-defun-function)" \
 -eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
 -load $FILE1 \
@@ -120,123 +121,27 @@ h1 () {
 
 h2 () {
     $EMACS -Q --batch \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
 --eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
 --eval "(require 'scala-mode)" \
+--eval "(add-to-list 'load-path (getenv \"GEN\"))" \
+--eval "(require 'ar-mode)" \
+--eval "(add-to-list 'load-path (getenv \"PWD\"))" \
+--eval "(require 'extended-scala-mode)" \
+--eval "(extended-scala-mode)" \
+--eval "(message \"beginning-of-defun-function: %s\" beginning-of-defun-function)" \
+-eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
 -load $FILE1 \
+--eval "(require 'ar-mode)" \
 -load $FILE2 \
--load $FILE3 \
--load $FILE4 \
--load $FILE5 \
--load $FILE6 \
--load $FILE7 \
--load $FILE8 \
--load $FILE9 \
--load $FILE10 \
--load $FILE11 \
--load $FILE12 \
+--eval "(message \"beginning-of-defun-function: %s\" beginning-of-defun-function)" \
+--eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
 \
 -load $SETUP \
 -load $TEST2 \
 -f ert-run-tests-batch-and-exit
 }
 
-h3 () {
-    $EMACS -Q --batch \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
---eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
---eval "(require 'scala-mode)" \
--load $FILE1 \
--load $FILE2 \
--load $FILE3 \
--load $FILE4 \
--load $FILE5 \
--load $FILE6 \
--load $FILE7 \
--load $FILE8 \
--load $FILE9 \
--load $FILE10 \
--load $FILE11 \
--load $FILE12 \
-\
--load $SETUP \
--load $TEST3 \
--f ert-run-tests-batch-and-exit
-}
 
-h4 () {
-    $EMACS -Q --batch \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
---eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
---eval "(require 'scala-mode)" \
---eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
--load $FILE1 \
--load $FILE2 \
--load $FILE3 \
--load $FILE4 \
--load $FILE5 \
--load $FILE6 \
--load $FILE7 \
--load $FILE8 \
--load $FILE9 \
--load $FILE10 \
--load $FILE11 \
--load $FILE12 \
-\
--load $SETUP \
--load $TEST4 \
--f ert-run-tests-batch-and-exit
-}
-
-lxcTests () {
-    $EMACS -Q --batch \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
---eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
---eval "(require 'scala-mode)" \
---eval "(message \"end-of-defun-function: %s\" end-of-defun-function)" \
--load $FILE1 \
--load $FILE2 \
--load $FILE3 \
--load $FILE4 \
--load $FILE5 \
--load $FILE6 \
--load $FILE7 \
--load $FILE8 \
--load $FILE9 \
--load $FILE10 \
--load $FILE11 \
--load $FILE12 \
-\
--load $SETUP \
--load $TEST5 \
--load $TEST6 \
--f ert-run-tests-batch-and-exit
-}
-
-hier () {
-    $EMACS -Q --batch \
---eval "(message (emacs-version))" \
---eval "(add-to-list 'load-path (getenv \"PWD\"))" \
---eval "(add-to-list 'load-path (getenv \"SCALAMODE\"))" \
---eval "(require 'scala-mode)" \
--load $FILE1 \
--load $FILE2 \
--load $FILE3 \
--load $FILE4 \
--load $FILE5 \
--load $FILE6 \
--load $FILE7 \
--load $FILE8 \
--load $FILE9 \
--load $FILE10 \
--load $FILE11 \
--load $FILE12 \
-\
--load $SETUP \
--load $TEST1 \
--load $TEST2 \
--f ert-run-tests-batch-and-exit
-}
 
 # -load $TEST19 \
 

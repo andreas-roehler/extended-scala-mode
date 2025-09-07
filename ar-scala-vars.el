@@ -54,7 +54,7 @@ Default is nil"
   :group 'languages
   :prefix "ar-scala-")
 
-(defconst ar-scala-version "6.3.1")
+(defconst ar-scala-version "0.1")
 
 (defvar ar-scala-install-directory nil
   "Make sure it exists.")
@@ -1037,7 +1037,7 @@ should be of the form ‘#x...’ where ‘x’ is not a blank or a tab, and
   :tag "ar-scala-block-comment-prefix"
   :group 'ar-scala-mode)
 
-(defcustom ar-scala-indent-offset 4
+(defcustom ar-scala-indent-offset 2
   "Amount of offset per level of indentation.
 ‘\\[py-guess-indent-offset]’ can usually guess a good value when
 you're editing someone else's Python code."
@@ -2751,7 +2751,6 @@ See ‘ar-scala-no-outdent-re-raw’ for better readable content")
 		       )
   "Matches the beginning of a compound statement.")
 
-
 ;; (defconst scala-syntax:other-keywords-unsafe-re
 ;;   (regexp-opt '("abstract" "case" "catch" "class" "def" "do" "else" "enum"
 ;;                 "export" "extends" "final" "finally" "for" "given" "forSome"
@@ -2847,16 +2846,27 @@ See ‘ar-scala-minor-block-re-raw’ for better readable content")
 (defconst ar-scala-class-re "[ \t]*\\_<\\(class\\)\\_>[ \n\t]"
   "Matches the beginning of a class definition.")
 
-(defconst ar-scala-def-or-class-re "[ \t]*\\_<\\(async def\\|class\\|def\\)\\_>[ \n\t]+\\([[:alnum:]_]*\\)"
+(defconst ar-scala-def-or-class-re "[ \t]*\\<\\(class\\|def\\|object\\|trait\\)\\>[ \n\t]"
   "Matches the beginning of a class- or functions definition.
 
 Second group grabs the name")
 
 ;; (setq ar-scala-def-or-class-re "[ \t]*\\_<\\(async def\\|class\\|def\\)\\_>[ \n\t]")
 
-;; (defconst ar-scala-def-re "[ \t]*\\_<\\(async def\\|def\\)\\_>[ \n\t]"
-(defconst ar-scala-def-re "[ \t]*\\_<\\(def\\|async def\\)\\_>[ \n\t]"
+(defconst ar-scala-def-re "[ \t]*\\<def\\>\\_>[ \n\t]"
   "Matches the beginning of a functions definition.")
+
+(defvar ar-scala-comment-start "// "
+  "Value of comment start in scala-mode.")
+
+(defvar ar-scala-comment-start-skip "\\(//+\\|/\\*+\\)[ \t]*"
+  "Regexp to match the start of a comment plus everything up to its body.")
+
+(defvar ar-scala-comment-start-re (concat "[ \t]*" scala-syntax:comment-start-re)
+  "")
+
+(defvar ar-scala-comment-start-skip-re "/[/*] +"
+  "")
 
 (defcustom ar-scala-block-or-clause-re-raw
   (list
@@ -2927,9 +2937,8 @@ Second group grabs the name")
 (defcustom ar-scala-minor-clause-re-raw
   (list
    "case"
-   "elif"
+   "catch"
    "else"
-   "except"
    "finally"
    )
   "Matches the beginning of a clause."
@@ -2941,7 +2950,7 @@ Second group grabs the name")
   (concat
    "[ \t]*"
    (regexp-opt  ar-scala-minor-clause-re-raw 'symbols)
-   "[( \t]*.*:")
+   "[( \t]*.*")
   "See ‘ar-scala-minor-clause-re-raw’, which it reads.")
 
 (defcustom ar-scala-top-level-re
@@ -3436,8 +3445,6 @@ Default nil"
   :set (lambda (symbol value)
          (set-default symbol value)
          (ar-scala-electric-backspace-mode (if value 1 0))))
-
-
 
 (provide 'ar-scala-vars)
 ;;; ar-scala-vars.el ends here

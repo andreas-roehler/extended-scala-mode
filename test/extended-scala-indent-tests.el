@@ -54,6 +54,7 @@
         removeKIntern(k, xs.tail, res)
 }"
     'scala-mode
+    (extended-scala-mode) 
     'ar-verbose-p
     (goto-char (point-max))
     (search-backward "if" nil t 2)
