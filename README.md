@@ -1,6 +1,6 @@
 # extended-scala-mode
 
-Reliable indentation and navigation.
+Indentation and navigation.
 
 Extends 
 
