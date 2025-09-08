@@ -1,9 +1,10 @@
 # extended-scala-mode
-Navigation in Emacs scala-mode 
 
-Jump to beginning or end of function or class
+Reliable indentation and navigation.
 
-<kbd>C-M-a</kbd> and <kbd>C-M-e</kbd>.
+Extends 
+
+https://github.com/hvesalai/emacs-scala-mode
 
 Provides commands
 
