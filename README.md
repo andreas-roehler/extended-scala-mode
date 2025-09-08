@@ -6,7 +6,7 @@ Extends
 
 https://github.com/hvesalai/emacs-scala-mode
 
-Requires
+Requires also
 
 https://github.com/andreas-roehler/emacs-generics
 
