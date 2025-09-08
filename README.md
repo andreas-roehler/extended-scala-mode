@@ -6,6 +6,10 @@ Extends
 
 https://github.com/hvesalai/emacs-scala-mode
 
+Requires
+
+https://github.com/andreas-roehler/emacs-generics
+
 Provides commands
 
 - ar-scala-backward-def
